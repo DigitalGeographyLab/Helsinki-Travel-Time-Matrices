@@ -27,6 +27,7 @@ RUN \
         gdal-dev \
         geos-dev \
         gfortran \
+        git \
         linux-headers \
         musl-dev \
         proj-dev \
@@ -35,7 +36,7 @@ RUN \
 && \
     echo "install r5py + python dependencies" >/dev/null \
 && \
-    pip install -U r5py \
+    pip install -U git+https://github.com/r5py/r5py.git \
 && \
     echo "remove build dependencies" \
 && \
@@ -45,6 +46,7 @@ RUN \
         gdal-dev \
         geos-dev \
         gfortran \
+        git \
         linux-headers \
         musl-dev \
         proj-dev \
@@ -58,6 +60,12 @@ RUN \
     pip cache purge \
 && \
     rm -Rf /var/cache/apk/*
+
+
+# set Java environment variables
+ENV JAVA_HOME="/usr/lib/jvm/default-jvm"
+ENV LD_LIBRARY_PATH="/usr/lib:/usr/lib/jvm/default-jvm/lib/server/:/usr/lib/jvm/default-jvm/lib/"
+#PATH=$PATH:/usr/lib/jvm/default-jvm/bin
 
 
 # copy our custom R5 build to the image
