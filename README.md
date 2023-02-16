@@ -14,3 +14,19 @@ The repository at
 is tracking the **upstream repository** at
 [github.com/DigitalGeographyLab](https://github.com/DigitalGeographyLab/Helsinki-Travel-Time-Matrices).
 <br>**DO NOT PUSH DIRECTLY TO DOWNSTREAM!**
+
+To update the downstream repository, follow the following steps:
+
+- check out downstream repository
+- add upstream repository as additional remote
+- rebase downstream main from upstream urbanage-release
+- push to downstream
+
+```
+git clone https://<username>@<access_token>srcrep.atc.gr/urbanageeu/travel-time-matrices.git
+cd travel-time-matrices
+git remote add upstream git@github.com:DigitalGeographyLab/Helsinki-Travel-Time-Matrices.git
+git fetch remote
+git rebase upstream/urbanage-release
+git push
+```
