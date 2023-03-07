@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine
 
 # install dependencies: 
 # needs to be in one single RUN command, otherwise ’docker build’ creates
@@ -8,21 +8,12 @@ FROM alpine:edge
 # the ‘echo >/dev/null’ directives are used as comments; normal comments
 # would prevent escaping the line feed
 RUN \
-    cat /etc/apk/repositories \
-&& \
-    echo "enable community and testing repositories" >/dev/null \
-&& \
-    sed 's/^#\(.*(community|testing)\)$/\1/' -i /etc/apk/repositories \
-&& \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-&& \
     echo "install basic dependencies of r5py/R5/Python packages" >/dev/null \
 && \
     apk add \
         bash \
         gdal \
         geos \
-        libosmium \
         openjdk17-jdk \
         openjdk17-jre-headless \
         py3-pip \
@@ -37,7 +28,6 @@ RUN \
         geos-dev \
         gfortran \
         git \
-        libosmium-dev \
         linux-headers \
         musl-dev \
         proj-dev \
@@ -47,6 +37,11 @@ RUN \
     echo "install r5py + python dependencies" >/dev/null \
 && \
     pip install -U git+https://github.com/r5py/r5py.git \
+&& \
+    echo "install other python dependencies" >/dev/null \
+&& \
+    pip install \
+        osmium \
 && \
     echo "remove build dependencies" \
 && \
