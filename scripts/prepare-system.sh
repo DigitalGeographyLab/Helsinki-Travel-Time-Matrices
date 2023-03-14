@@ -11,21 +11,23 @@ IFS=$'\n\t '
 
 
 # 1. Update system packages
-pacman --noconfirm -Syyu
+pacman --noconfirm -Syu
 
 
 # 2. Install build-time dependencies (removed further down)
 pacman --noconfirm \
-    -S --asdeps \
-        base-devel \
-        git \
-        pacman-contrib \
-        python-pip
+    -S \
+        --asdeps \
+            base-devel \
+            git \
+            pacman-contrib \
+            python-pip
 
 
-# 3. Install some Python packages system-wide (better runtime performance)
+# 3. Install some Python (etc.) packages system-wide (better runtime performance)
 pacman --noconfirm \
     -S \
+        jdk-openjdk \
         python-fiona \
         python-geopandas \
         python-joblib \
@@ -45,18 +47,25 @@ sudo -u aurbuilder /bin/bash <<EOF
     cd
 
     for PACKAGE in \
-        python-jpype1 \
         include-what-you-use \
         protozero \
-        libosmium \
+        libosmium
+    do
+        git clone "https://aur.archlinux.org/\${PACKAGE}.git"
+        cd "\${PACKAGE}"
+        makepkg --noconfirm --syncdeps --rmdeps --install --asdeps
+        cd ..
+    done
+
+    for PACKAGE in \
+        python-jpype1 \
         osmium-tool
     do
         git clone "https://aur.archlinux.org/\${PACKAGE}.git"
         cd "\${PACKAGE}"
-        makepkg --noconfirm --syncdeps --install
+        makepkg --noconfirm --syncdeps --rmdeps --install
         cd ..
     done
-
 EOF
 
 
@@ -70,11 +79,29 @@ useradd --create-home dgl
 
 
 # 8. Install r5py into this unprivileged user’s ~/.local/
-sudo -u dgl pip install git+https://github.com/r5py/r5py.git
+#    and run its unit-tests
+sudo -u dgl /bin/bash <<EOF
+    cd
+    pip install git+https://github.com/r5py/r5py.git
+
+    pip install pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+
+    # clone source tree (with tests + test data)
+    git clone https://github.com/r5py/r5py.git
+
+    # run tests
+    cd r5py
+    python -m pytest
+
+    # delete source tree and uninstall test dependencies
+    cd
+    rm -R r5py
+    pip uninstall pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+EOF
 
 
 # 9. Clean pacman cache, and uninstall unneeded packages
-paccache -ruk0
+paccache -rk0
 while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
     do
         sleep 0.1
