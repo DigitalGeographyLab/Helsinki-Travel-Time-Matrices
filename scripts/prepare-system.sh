@@ -33,7 +33,7 @@ pacman --noconfirm \
         python-joblib \
         python-pyproj \
         python-requests \
-        python-shapely \
+        python-shapely
 
 
 # 4. Create a user to compile additional packages, allow it to run `sudo pacman`
@@ -97,18 +97,13 @@ sudo -u dgl /bin/bash <<EOF
 EOF
 
 
-
-# TODO: remove this (only for debugging)
-pacman --noconfirm -S \
-    ncdu
-
-
 # 9. Clean pacman cache, and uninstall unneeded packages
 paccache -rk0
 while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
     do
         sleep 0.1
     done
+
 
 # 10. Clean-up: remove ourselves
 rm -v -- "${BASH_SOURCE[0]}"
