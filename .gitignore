@@ -9,3 +9,9 @@
 !.keep
 
 data/*
+
+/python-packages/*/build/
+/python-packages/*/dist/
+__pycache__
+.virtualenv
+*.egg-info
