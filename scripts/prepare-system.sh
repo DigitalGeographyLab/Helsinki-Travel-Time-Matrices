@@ -82,7 +82,9 @@ useradd --create-home dgl
 #    and run its unit-tests
 sudo -u dgl /bin/bash <<EOF
     cd
-    pip install --upgrade "r5py[tests] @ git+https://github.com/r5py/r5py.git"
+    pip install git+https://github.com/r5py/r5py.git
+
+    pip install pytest pytest-asyncio pytest-cov pytest-lazy-fixture
 
     # clone source tree (with tests + test data)
     git clone https://github.com/r5py/r5py.git
@@ -91,9 +93,10 @@ sudo -u dgl /bin/bash <<EOF
     cd r5py
     python -m pytest
 
-    # delete source tree
+    # delete source tree and uninstall test dependencies
     cd
     rm -R r5py
+    pip uninstall pytest pytest-asyncio pytest-cov pytest-lazy-fixture
 EOF
 
 
