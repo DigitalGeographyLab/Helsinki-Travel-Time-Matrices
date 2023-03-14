@@ -1,0 +1,17 @@
+*~
+**/*~
+*.swp
+**/*.swp
+.DS_Store
+*/.DS_Store
+**/.DS_Store
+
+!.keep
+
+data/*
+
+/python-packages/*/build/
+/python-packages/*/dist/
+__pycache__
+.virtualenv
+*.egg-info
