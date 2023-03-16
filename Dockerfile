@@ -1,6 +1,7 @@
 FROM archlinux AS base
 
 # install r5py, its dependencies, and other required software
+COPY python-packages/ /tmp/python-packages/
 COPY scripts/prepare-system.sh /tmp/prepare-system.sh
 RUN /tmp/prepare-system.sh
 

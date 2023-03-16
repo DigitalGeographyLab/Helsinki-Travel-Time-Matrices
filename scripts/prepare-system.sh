@@ -96,11 +96,21 @@ sudo -u dgl /bin/bash <<EOF
     # delete source tree and uninstall test dependencies
     cd
     rm -R r5py
-    pip uninstall pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+    pip uninstall -y pytest pytest-asyncio pytest-cov pytest-lazy-fixture
 EOF
 
 
-# 9. Clean pacman cache, and uninstall unneeded packages
+# 9. Install local python packages
+chown -R dgl:dgl /tmp/python-packages/
+sudo -u dgl /bin/bash <<EOF
+    ls -1d /tmp/python-packages/* | while read PACKAGE
+        do
+            pip install "\${PACKAGE}"
+        done
+EOF
+
+
+# 10. Clean pacman cache, and uninstall unneeded packages
 paccache -rk0
 while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
     do
@@ -108,5 +118,6 @@ while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
     done
 
 
-# 10. Clean-up: remove ourselves
+# 11. Clean-up: remove ourselves
+rm -Rv -- /tmp/python-packages/
 rm -v -- "${BASH_SOURCE[0]}"
