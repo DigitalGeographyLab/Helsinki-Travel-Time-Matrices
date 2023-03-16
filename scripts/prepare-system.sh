@@ -96,11 +96,12 @@ sudo -u dgl /bin/bash <<EOF
     # delete source tree and uninstall test dependencies
     cd
     rm -R r5py
-    pip uninstall pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+    pip uninstall -y pytest pytest-asyncio pytest-cov pytest-lazy-fixture
 EOF
 
 
 # 9. Install local python packages
+chown -R dgl:dgl /tmp/python-packages/
 sudo -u dgl /bin/bash <<EOF
     ls -1d /tmp/python-packages/* | while read PACKAGE
         do
