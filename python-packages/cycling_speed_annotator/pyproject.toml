@@ -24,7 +24,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 keywords = ["transport", "routing", "research", "cycling"]
-license = {text = "GPL-3.0-or-later or MIT"}
+license = {text = "GPL-3.0-or-later"}
 
 dynamic = ["version"]
 
