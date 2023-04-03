@@ -58,7 +58,7 @@ class BaseTravelTimeMatrixComputer:
 
     @extent.setter
     def extent(self, value):
-        self._extent = value.to_crs("EPSG:4326")
+        self._extent = value
 
     @property
     def gtfs_data_sets(self):
