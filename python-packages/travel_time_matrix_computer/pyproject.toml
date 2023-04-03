@@ -12,7 +12,6 @@ authors = [
 ]
 
 dependencies = [
-    "ConfigArgParse",
     "dateparser",
     "geopandas",
     "pandas",

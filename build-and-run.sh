@@ -11,4 +11,5 @@ docker run \
     -it \
     -u $(id -u):$(id -g) \
     -v "${DATA_DIRECTORY}:/data" \
-    helsinki-ttm
+    helsinki-ttm \
+    "$@"

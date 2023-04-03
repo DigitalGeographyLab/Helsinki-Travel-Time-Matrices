@@ -33,7 +33,27 @@ pacman --noconfirm \
         python-joblib \
         python-pyproj \
         python-requests \
-        python-shapely
+        python-shapely \
+        #vim
+
+# 3½. Install GDAL’s dependencies, so it does not spam the console
+# (cf. https://bugs.archlinux.org/index.php?do=details&task_id=75749 )
+pacman --noconfirm \
+    -S \
+        --asdeps \
+            arrow \
+            cfitsio \
+            hdf5 \
+            libheif \
+            libjxl \
+            libwebp \
+            mariadb-libs \
+            netcdf \
+            openexr \
+            openjpeg2 \
+            podofo \
+            poppler \
+            postgresql-libs
 
 
 # 4. Create a user to compile additional packages, allow it to run `sudo pacman`
@@ -112,7 +132,7 @@ EOF
 
 # 10. Clean pacman cache, and uninstall unneeded packages
 paccache -rk0
-while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
+while (pacman -Qtdq | pacman --noconfirm -Rsndc -)
     do
         sleep 0.1
     done
