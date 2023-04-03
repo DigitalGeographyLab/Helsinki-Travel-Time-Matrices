@@ -98,27 +98,27 @@ def read_config(config_file=CONFIG_FILE):
         config = pyaml.yaml.safe_load(f.read())
 
     # mandatory
-    config["osm-history-file"] = _parse_path(config["osm-history-file"])
-    config["origins-destinations"] = _parse_origins_destinations(
-        _parse_path(config["origins-destinations"])
+    config["osm_history_file"] = _parse_path(config["osm_history_file"])
+    config["origins_destinations"] = _parse_origins_destinations(
+        _parse_path(config["origins_destinations"])
     )
     config["date"] = _parse_date(config["date"])
 
     # optional
     try:
-        config["cycling-speeds"] = pandas.read_csv(
-            _parse_path(config["cycling-speeds"])
+        config["cycling_speeds"] = pandas.read_csv(
+            _parse_path(config["cycling_speeds"])
         )
     except KeyError:
-        config["cycling-speeds"] = None
+        config["cycling_speeds"] = None
     try:
         config["extent"] = _parse_extent(config["extent"])
     except KeyError:
         config["extent"] = None
     try:
-        config["gtfs-data-sets"] = _parse_gtfs_files(config["gtfs-data-sets"])
+        config["gtfs_data_sets"] = _parse_gtfs_files(config["gtfs_data_sets"])
     except KeyError:
-        config["gtfs-data-sets"] = []
+        config["gtfs_data_sets"] = []
 
     return config
 
