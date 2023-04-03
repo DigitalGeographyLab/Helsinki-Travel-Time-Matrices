@@ -81,10 +81,6 @@ def _parse_origins_destinations(origins_destinations):
         origins_destinations.geometry, geopandas.GeoSeries
     ), "origins-destinations must have a `geometry` column"
 
-    # TODO (in `TravelTimeMatrixComputer.run()`):
-    # convert to centroids if polygon, (only later, so we can keep the
-    # original file for joined output)
-
     return origins_destinations
 
 
@@ -103,12 +99,16 @@ def read_config(config_file=CONFIG_FILE):
 
     # mandatory
     config["osm-history-file"] = _parse_path(config["osm-history-file"])
-    config["origins-destinations"] = _parse_origins_destinations(_parse_path(config["origins-destinations"]))
+    config["origins-destinations"] = _parse_origins_destinations(
+        _parse_path(config["origins-destinations"])
+    )
     config["date"] = _parse_date(config["date"])
 
     # optional
     try:
-        config["cycling-speeds"] = pandas.read_csv(_parse_path(config["cycling-speeds"]))
+        config["cycling-speeds"] = pandas.read_csv(
+            _parse_path(config["cycling-speeds"])
+        )
     except KeyError:
         config["cycling-speeds"] = None
     try:
