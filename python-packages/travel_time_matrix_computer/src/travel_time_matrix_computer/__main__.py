@@ -133,10 +133,11 @@ def main():
     """
 
     config = read_config()
-    print(config)
 
     travel_time_matrix_computer = TravelTimeMatrixComputer(**config)
-    travel_time_matrix_computer.run()
+    travel_times = travel_time_matrix_computer.run()
+
+    travel_times.to_csv(DATA_DIRECTORY / "travel_times.csv.zst")
 
 
 if __name__ == "__main__":

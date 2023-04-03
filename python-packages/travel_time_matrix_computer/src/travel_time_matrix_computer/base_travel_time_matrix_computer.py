@@ -5,6 +5,7 @@
 data, compile output)"""
 
 
+import datetime
 import pathlib
 import subprocess
 import tempfile
@@ -17,6 +18,8 @@ __all__ = ["BaseTravelTimeMatrixComputer"]
 
 
 class BaseTravelTimeMatrixComputer:
+    DEFAULT_TIME_OF_DAY = datetime.time(hour=12)
+
     def __init__(
         self,
         osm_history_file,
