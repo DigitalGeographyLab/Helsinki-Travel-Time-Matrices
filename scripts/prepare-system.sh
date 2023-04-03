@@ -62,6 +62,7 @@ echo "aurbuilder ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/10-aurbuilder
 
 
 # 5. Install dependencies from the AUR
+echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
 sudo -u aurbuilder /bin/bash <<EOF
 
     cd
