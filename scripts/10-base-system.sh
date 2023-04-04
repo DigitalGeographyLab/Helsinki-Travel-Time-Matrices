@@ -34,7 +34,7 @@ pacman --noconfirm \
         python-pyproj \
         python-requests \
         python-shapely \
-        #vim
+        vim
 
 # 3½. Install GDAL’s dependencies, so it does not spam the console
 # (cf. https://bugs.archlinux.org/index.php?do=details&task_id=75749 )
@@ -99,46 +99,5 @@ rm -v /etc/sudoers.d/10-aurbuilder
 useradd --create-home dgl
 
 
-# 8. Install r5py into this unprivileged user’s ~/.local/
-#    and run its unit-tests
-sudo -u dgl /bin/bash <<EOF
-    cd
-    pip install git+https://github.com/r5py/r5py.git
-
-    pip install pytest pytest-asyncio pytest-cov pytest-lazy-fixture
-
-    # clone source tree (with tests + test data)
-    git clone https://github.com/r5py/r5py.git
-
-    # run tests
-    cd r5py
-    python -m pytest
-
-    # delete source tree and uninstall test dependencies
-    cd
-    rm -R r5py
-    pip uninstall -y pytest pytest-asyncio pytest-cov pytest-lazy-fixture
-EOF
-
-
-# 9. Install local python packages
-chown -R dgl:dgl /tmp/python-packages/
-sudo -u dgl /bin/bash <<EOF
-    ls -1d /tmp/python-packages/* | while read PACKAGE
-        do
-            pip install "\${PACKAGE}"
-        done
-EOF
-
-
-# 10. Clean pacman cache, and uninstall unneeded packages
-paccache -rk0
-while (pacman -Qtdq | pacman --noconfirm -Rsndc -)
-    do
-        sleep 0.1
-    done
-
-
-# 11. Clean-up: remove ourselves
-rm -Rv -- /tmp/python-packages/
+# 99. Clean-up: remove ourselves
 rm -v -- "${BASH_SOURCE[0]}"

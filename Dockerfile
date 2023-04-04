@@ -2,14 +2,27 @@ FROM archlinux AS base
 
 ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post12-g8ebe6ff-dgl-20230330/r5-v6.9-12-g8ebe6ff-all.jar
 
-# install r5py, its dependencies, and other required software
+# copy installation scripts
+COPY scripts/ /tmp/scripts/
+
+# install base system + dependencies for r5py
+RUN /tmp/scripts/10-base-system.sh
+
+# install r5py and test it
+FROM base AS base_r5py
+RUN /tmp/scripts/20-install-and-test-r5py.sh
+
+# install the local python packages
+FROM base_r5py AS base_r5py_local_python_packages
 COPY python-packages/ /tmp/python-packages/
-COPY scripts/prepare-system.sh /tmp/prepare-system.sh
-RUN /tmp/prepare-system.sh
+RUN /tmp/scripts/30-install-local-python-packages.sh
+
+# clean up system image
+FROM base_r5py_local_python_packages AS system
+RUN /tmp/scripts/99-cleanup.sh
 
 
-
-FROM base AS r5-and-user
+FROM system AS r5-and-user
 
 # copy our custom R5 build to the image
 ADD "${R5_JAR_URL}" /usr/share/java/r5/r5-all.jar
@@ -27,5 +40,5 @@ FROM r5-and-user AS final-stage
 COPY --from=r5-and-user / /
 
 # what to run
-ENTRYPOINT ["/home/dgl/.local/bin/travel-time-matrix"]
-#ENTRYPOINT ["/bin/bash", "--login"]
+#ENTRYPOINT ["/home/dgl/.local/bin/travel-time-matrix"]
+ENTRYPOINT ["/bin/bash", "--login"]
