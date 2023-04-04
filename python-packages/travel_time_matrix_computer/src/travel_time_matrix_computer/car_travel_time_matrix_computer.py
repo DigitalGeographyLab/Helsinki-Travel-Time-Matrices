@@ -38,23 +38,22 @@ class CarTravelTimeMatrixComputer(
 
     def run(self):
         travel_times = None
-        for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
-            with tempfile.TemporaryDirectory() as temporary_directory:
-                annotated_osm_extract_file = (
-                    pathlib.Path(temporary_directory)
-                    / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
-                )
+        original_osm_extract_file = self.osm_extract_file
 
-                car_speed_annotator.CarSpeedAnnotator(timeslot_name).annotate(
-                    self.osm_extract_file,
-                    annotated_osm_extract_file,
-                )
+        for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
+            annotated_osm_extract_file = (
+                original_osm_extract_file.parent
+                / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
+            )
+
+            car_speed_annotator.CarSpeedAnnotator(timeslot_name).annotate(
+                self.osm_extract_file,
+                annotated_osm_extract_file,
+            )
+            self.osm_extract_file = annotated_osm_extract_file
 
             travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
-                [
-                    annotated_osm_extract_file,
-                    self.gtfs_data_sets,
-                ],
+                transport_network=self.transport_network,
                 origins=self.origins_destinations,
                 departure=datetime.datetime.combine(self.date, timeslot_time),
                 transport_modes=[r5py.LegMode.CAR],
@@ -77,5 +76,8 @@ class CarTravelTimeMatrixComputer(
                 travel_times = _travel_times
             else:
                 travel_times = travel_times.join(_travel_times)
+
+            annotated_osm_extract_file.unlink()
+            self.osm_extract_file = original_osm_extract_file
 
         return travel_times
