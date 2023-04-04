@@ -40,5 +40,5 @@ FROM r5-and-user AS final-stage
 COPY --from=r5-and-user / /
 
 # what to run
-#ENTRYPOINT ["/home/dgl/.local/bin/travel-time-matrix"]
-ENTRYPOINT ["/bin/bash", "--login"]
+ENTRYPOINT ["/home/dgl/.local/bin/travel-time-matrix"]
+#ENTRYPOINT ["/bin/bash", "--login"]
