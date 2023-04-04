@@ -35,12 +35,16 @@ class PublicTransportTravelTimeMatrixComputer(
                     transport_modes=[r5py.LegMode.TRANSIT],
                     speed_walking=walking_speed,
                 )
-                _travel_times = travel_time_matrix_computer.compute_travel_times()[
-                    ["from_id", "to_id", "travel_time"]
-                ].set_index(["from_id", "to_id"])
-                _travel_times.rename(
-                    columns={"travel_time": f"pt_{timeslot_name[0]}_{variable_name}"}
+
+                column_name = f"pt_{timeslot_name[0]}_{variable_name}"
+                # fmt: off
+                _travel_times = (
+                    travel_time_matrix_computer.compute_travel_times()
+                    [["from_id", "to_id", "travel_time"]]
+                    .set_index(["from_id", "to_id"])
+                    .rename(columns={"travel_time": column_name})
                 )
+                # fmt: on
 
                 if travel_times is None:
                     travel_times = _travel_times

@@ -22,11 +22,15 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     # column name -> cycling (base!) speed in km/h
     # these are default values, and are adjusted in __init__()
     # according to the cycling speeds read from `self.cycling_speeds`
+    # (keeping this as a CONSTANT, as it is set/modified during __init__(), only)
     CYCLING_SPEEDS = {
         "bike_fst": 18.09,
         "bike_avg": 14.92,
         "bike_slo": 11.75,
     }
+
+    # Adding one minute flat to account for unlocking and locking the bicycle
+    UNLOCKING_LOCKING_TIME = 1
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -65,10 +69,16 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 ),
                 transport_modes=[r5py.LegMode.BICYCLE],
             )
-            _travel_times = travel_time_matrix_computer.compute_travel_times()[
-                ["from_id", "to_id", "travel_time"]
-            ].set_index(["from_id", "to_id"])
-            _travel_times.rename(columns={"travel_time": column_name})
+
+            # fmt: off
+            _travel_times = (
+                travel_time_matrix_computer.compute_travel_times()
+                [["from_id", "to_id", "travel_time"]]
+                .set_index(["from_id", "to_id"])
+                .rename(columns={"travel_time": column_name})
+            )
+            # fmt: on
+            _travel_times[column_name] += self.UNLOCKING_LOCKING_TIME
 
             if travel_times is None:
                 travel_times = _travel_times

@@ -59,11 +59,17 @@ class CarTravelTimeMatrixComputer(
                 departure=datetime.datetime.combine(self.date, timeslot_time),
                 transport_modes=[r5py.LegMode.CAR],
             )
-            _travel_times = travel_time_matrix_computer.compute_travel_times()[
-                ["from_id", "to_id", "travel_time"]
-            ].set_index(["from_id", "to_id"])
-            _travel_times.rename(columns={"travel_time": f"car_{timeslot_name[0]}"})
-            _travel_times["travel_time"] += _travel_times["to_id"].apply(
+
+            column_name = f"car_{timeslot_name[0]}"
+            # fmt: off
+            _travel_times = (
+                travel_time_matrix_computer.compute_travel_times()
+                [["from_id", "to_id", "travel_time"]]
+                .set_index(["from_id", "to_id"])
+                .rename(columns={"travel_time": column_name})
+            )
+            # fmt: on
+            _travel_times[column_name] += _travel_times["to_id"].apply(
                 lambda to_id: self.parking_times["id" == to_id]["parking_time"]
             )
 
