@@ -132,10 +132,6 @@ class BaseTravelTimeMatrixComputer:
             # fmt: on
 
     @property
-    def osm_extract_file(self):
-        return self._osm_extract_file
-
-    @property
     def osm_history_file(self):
         return self._osm_history_file
 
@@ -153,8 +149,6 @@ class BaseTravelTimeMatrixComputer:
             )
 
             extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
-            # with open(extent_polygon, "w") as f:
-            #     f.write(shapely.to_geojson(self.extent))
             geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
             subprocess.run(
@@ -185,7 +179,7 @@ class BaseTravelTimeMatrixComputer:
                 ]
             )
 
-        self._osm_extract_file = osm_extract_filename
+        self.osm_extract_file = osm_extract_filename
 
     @property
     def transport_network(self):
