@@ -34,7 +34,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.cycling_speeds:
+        if self.cycling_speeds is not None:
             c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
             self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
             self.CYCLING_SPEEDS["bike_avg"] = (
