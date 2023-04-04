@@ -41,6 +41,8 @@ class CarTravelTimeMatrixComputer(
         original_osm_extract_file = self.osm_extract_file
 
         for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
+            column_name = f"car_{timeslot_name[0]}"
+
             annotated_osm_extract_file = (
                 original_osm_extract_file.parent
                 / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
@@ -59,18 +61,21 @@ class CarTravelTimeMatrixComputer(
                 transport_modes=[r5py.LegMode.CAR],
             )
 
-            column_name = f"car_{timeslot_name[0]}"
+            _travel_times = travel_time_matrix_computer.compute_travel_times()
+
             # fmt: off
+            _travel_times = _travel_times.set_index("from_id")
+            _travel_times["travel_time"] += _travel_times.join(self.access_walking_times)["walking_time"]
+            _travel_times = _travel_times.set_index("to_id")
+            _travel_times["travel_time"] += _travel_times.join(self.access_walking_times)["walking_time"]
+            _travel_times["travel_time"] += _travel_times.join(self.parking_times)["parking_time"]
+
             _travel_times = (
-                travel_time_matrix_computer.compute_travel_times()
+                _travel_times.set_index(["from_id", "to_id"])
                 [["from_id", "to_id", "travel_time"]]
-                .set_index(["from_id", "to_id"])
                 .rename(columns={"travel_time": column_name})
             )
             # fmt: on
-            _travel_times[column_name] += _travel_times["to_id"].apply(
-                lambda to_id: self.parking_times["id" == to_id]["parking_time"]
-            )
 
             if travel_times is None:
                 travel_times = _travel_times

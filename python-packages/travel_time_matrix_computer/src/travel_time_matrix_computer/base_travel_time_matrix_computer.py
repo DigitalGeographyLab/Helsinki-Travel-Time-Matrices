@@ -35,10 +35,10 @@ class BaseTravelTimeMatrixComputer:
         self.extent = extent
         self.date = date
 
+        self.cycling_speeds = cycling_speeds
+        self.gtfs_data_sets = gtfs_data_sets
         self.osm_history_file = osm_history_file
         self.origins_destinations = origins_destinations
-        self.gtfs_data_sets = gtfs_data_sets
-        self.cycling_speeds = cycling_speeds
 
     @property
     def cycling_speeds(self):
@@ -102,7 +102,10 @@ class BaseTravelTimeMatrixComputer:
 
     @origins_destinations.setter
     def origins_destinations(self, value):
-        value = value.to_crs("EPSG:4326")
+        WORKING_CRS = "EPSG:4326"
+        EQUIDISTANT_CRS = self._good_enough_crs
+
+        value = value.to_crs(WORKING_CRS)
 
         # cut to extent (if applicable):
         if self.extent is None:
@@ -118,18 +121,47 @@ class BaseTravelTimeMatrixComputer:
         self.__origins_destinations = value.copy()
 
         # use centroid if not already points
-        self._origins_destinations = value.copy()
-        if self._origins_destinations.geom_type.unique().tolist() != ["Point"]:
-            original_crs = self._origins_destinations.crs
-            equidistant_crs = self._good_enough_crs
+        origins_destinations = value.copy()
+        if origins_destinations.geom_type.unique().tolist() != ["Point"]:
             # fmt: off
-            self._origins_destinations.geometry = (
-                self._origins_destinations.geometry
-                .to_crs(equidistant_crs)
+            origins_destinations.geometry = (
+                origins_destinations.geometry
+                .to_crs(EQUIDISTANT_CRS)
                 .centroid
-                .to_crs(original_crs)
+                .to_crs(WORKING_CRS)
             )
             # fmt: on
+
+        # snap to network, remember walking time (constant speed)
+        # from original point to snapped point
+        WALKING_SPEED = 3.6  # km/h
+        # fmt: off
+        origins_destinations["snapped_geometry"] = (
+            self.transport_network.snap_to_network(origins_destinations["geometry"])
+        )
+        origins_destinations["snapped_distance"] = (  # meters
+            origins_destinations.geometry.to_crs(EQUIDISTANT_CRS)
+            .distance(
+                origins_destinations.snapped_geometry.to_crs(EQUIDISTANT_CRS)
+            )
+        )
+        origins_destinations["walking_time"] = (  # minutes
+            (origins_destinations["snapped_distance"] / 1000.0)
+            / (WALKING_SPEED * 60.0)
+        )
+
+        self.access_walking_times = (
+            origins_destinations
+            [["id", "walking_time"]]
+            .copy()
+            .set_index("id")
+        )
+        self._origins_destinations = (
+            origins_destinations
+            [["id", "geometry"]]
+            .copy()
+        )
+        # fmt: on
 
     @property
     def osm_history_file(self):
@@ -161,6 +193,7 @@ class BaseTravelTimeMatrixComputer:
                     "--output", f"{osm_snapshot_filename}",
                     "--output-format", "osm.pbf",
                     "--overwrite",
+                    "--no-progress",
                 ]
             )
             subprocess.run(
@@ -173,6 +206,7 @@ class BaseTravelTimeMatrixComputer:
                     "--output", f"{osm_extract_filename}",
                     "--output-format", "osm.pbf",
                     "--overwrite",
+                    "--no-progress",
                 ]
             )
             # fmt: on
