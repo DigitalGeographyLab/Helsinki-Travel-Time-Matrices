@@ -29,7 +29,7 @@ class CarTravelTimeMatrixComputer(
         for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
             with tempfile.TemporaryDirectory() as temporary_directory:
                 annotated_osm_extract_file = (
-                    pathlib.Path(temporary_directory.name)
+                    pathlib.Path(temporary_directory)
                     / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
                 )
 

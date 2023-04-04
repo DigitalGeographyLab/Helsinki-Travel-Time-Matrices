@@ -16,6 +16,7 @@ dependencies = [
     "geopandas",
     "pandas",
     "pyaml",
+    "pyproj",
     "r5py",
     "shapely>=2",
 ]

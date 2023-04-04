@@ -11,6 +11,8 @@ import subprocess
 import tempfile
 import warnings
 
+import geopandas
+import pyproj
 import r5py
 
 
@@ -34,7 +36,9 @@ class BaseTravelTimeMatrixComputer:
         self.date = date
 
         self.osm_history_file = osm_history_file
-        pass
+        self.origins_destinations = origins_destinations
+        self.gtfs_data_sets = gtfs_data_sets
+        self.cycling_speeds = cycling_speeds
 
     @property
     def cycling_speeds(self):
@@ -61,6 +65,30 @@ class BaseTravelTimeMatrixComputer:
         self._extent = value
 
     @property
+    def _good_enough_crs(self):
+        """
+        Find the most appropriate UTM reference system for the current extent.
+
+        (We need this to be able to calculate lengths in meters.
+        Results don’t have to be perfect, so also the neighbouring UTM grid will do.)
+
+        Returns
+        -------
+        pyproj.CRS
+            Best-fitting UTM reference system.
+        """
+        try:
+            crsinfo = pyproj.database.query_utm_crs_info(
+                datum_name="WGS 84",
+                area_of_interest=pyproj.aoi.AreaOfInterest(*self.extent.bounds),
+            )[0]
+            crs = pyproj.CRS.from_authority(crsinfo.auth_name, crsinfo.code)
+        except IndexError:
+            # no UTM grid found for the location?! are we on the moon?
+            crs = pyproj.CRS.from_epsg(3857)  # well, web mercator will have to do
+        return crs
+
+    @property
     def gtfs_data_sets(self):
         return self._gtfs_data_sets
 
@@ -84,7 +112,7 @@ class BaseTravelTimeMatrixComputer:
                 RuntimeWarning,
             )
         else:
-            value = value[value.geometry.within(self.extent.geometry)]
+            value = value[value.geometry.within(self.extent)]
 
         # remember original for joining output back
         self.__origins_destinations = value.copy()
@@ -92,8 +120,13 @@ class BaseTravelTimeMatrixComputer:
         # use centroid if not already points
         self._origins_destinations = value.copy()
         if self._origins_destinations.geom_type.unique().tolist() != ["Point"]:
+            original_crs = self._origins_destinations.crs
+            equidistant_crs = self._good_enough_crs
             self._origins_destinations.geometry = (
-                self._origins_destinations.geometry.centroid
+                self._origins_destinations.geometry
+                .to_crs(equidistant_crs)
+                .centroid
+                .to_crs(original_crs)
             )
 
     @property
@@ -109,7 +142,7 @@ class BaseTravelTimeMatrixComputer:
         with tempfile.TemporaryDirectory() as temporary_directory:
             osm_snapshot_datetime = f"{self.date:%Y-%m-%dT00:00:00Z}"
             osm_snapshot_filename = (
-                pathlib.Path(temporary_directory.name)
+                pathlib.Path(temporary_directory)
                 / f"{osm_history_file.stem}_{osm_snapshot_datetime}.osm.pbf"
             )
             osm_extract_filename = (
@@ -117,13 +150,16 @@ class BaseTravelTimeMatrixComputer:
                 / f"{osm_history_file.stem}_{osm_snapshot_datetime}_cut-to-extent.osm.pbf"
             )
 
-            extent_polygon = pathlib.Path(temporary_directory.name) / "extent.geojson"
-            self.extent.to_file(extent_polygon)
+            extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
+            # with open(extent_polygon, "w") as f:
+            #     f.write(shapely.to_geojson(self.extent))
+            geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
             subprocess.run(
                 [
                     "/usr/bin/osmium",
-                    "time-filter" f"{osm_history_file}",
+                    "time-filter",
+                    f"{osm_history_file}",
                     f"{osm_snapshot_datetime}",
                     "--output",
                     f"{osm_snapshot_filename}",

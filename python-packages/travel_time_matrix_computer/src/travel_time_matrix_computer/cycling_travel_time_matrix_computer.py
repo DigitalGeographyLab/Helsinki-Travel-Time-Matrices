@@ -42,7 +42,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
         for column_name, cycling_speed in self.CYCLING_SPEEDS.items():
             with tempfile.TemporaryDirectory() as temporary_directory:
                 annotated_osm_extract_file = (
-                    pathlib.Path(temporary_directory.name)
+                    pathlib.Path(temporary_directory)
                     / f"{self.osm_extract_file.stem}_{column_name}.osm.pbf"
                 )
 
