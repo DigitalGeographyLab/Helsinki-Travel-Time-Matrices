@@ -57,32 +57,33 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                     self.osm_extract_file,
                     annotated_osm_extract_file,
                 )
+                print([f for f in pathlib.Path(temporary_directory).glob("*")])
 
-            travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
-                [
-                    annotated_osm_extract_file,
-                    self.gtfs_data_sets,
-                ],
-                origins=self.origins_destinations,
-                departure=datetime.datetime.combine(
-                    self.date, self.DEFAULT_TIME_OF_DAY
-                ),
-                transport_modes=[r5py.LegMode.BICYCLE],
-            )
+                travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
+                    [
+                        annotated_osm_extract_file,
+                        self.gtfs_data_sets,
+                    ],
+                    origins=self.origins_destinations,
+                    departure=datetime.datetime.combine(
+                        self.date, self.DEFAULT_TIME_OF_DAY
+                    ),
+                    transport_modes=[r5py.LegMode.BICYCLE],
+                )
 
-            # fmt: off
-            _travel_times = (
-                travel_time_matrix_computer.compute_travel_times()
-                [["from_id", "to_id", "travel_time"]]
-                .set_index(["from_id", "to_id"])
-                .rename(columns={"travel_time": column_name})
-            )
-            # fmt: on
-            _travel_times[column_name] += self.UNLOCKING_LOCKING_TIME
+                # fmt: off
+                _travel_times = (
+                    travel_time_matrix_computer.compute_travel_times()
+                    [["from_id", "to_id", "travel_time"]]
+                    .set_index(["from_id", "to_id"])
+                    .rename(columns={"travel_time": column_name})
+                )
+                # fmt: on
+                _travel_times[column_name] += self.UNLOCKING_LOCKING_TIME
 
-            if travel_times is None:
-                travel_times = _travel_times
-            else:
-                travel_times = travel_times.join(_travel_times)
+                if travel_times is None:
+                    travel_times = _travel_times
+                else:
+                    travel_times = travel_times.join(_travel_times)
 
         return travel_times

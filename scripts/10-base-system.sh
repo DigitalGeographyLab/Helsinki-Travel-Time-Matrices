@@ -27,7 +27,7 @@ pacman --noconfirm \
 # 3. Install some Python (etc.) packages system-wide (better runtime performance)
 pacman --noconfirm \
     -S \
-        jdk-openjdk \
+        jdk11-openjdk \
         python-fiona \
         python-geopandas \
         python-joblib \
