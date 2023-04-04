@@ -12,9 +12,12 @@ authors = [
 ]
 
 dependencies = [
+    "car_speed_annotator",
+    "cycling_speed_annotator",
     "dateparser",
     "geopandas",
     "pandas",
+    "parking_times_calculator",
     "pyaml",
     "pyproj",
     "r5py",
