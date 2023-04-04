@@ -122,12 +122,14 @@ class BaseTravelTimeMatrixComputer:
         if self._origins_destinations.geom_type.unique().tolist() != ["Point"]:
             original_crs = self._origins_destinations.crs
             equidistant_crs = self._good_enough_crs
+            # fmt: off
             self._origins_destinations.geometry = (
                 self._origins_destinations.geometry
                 .to_crs(equidistant_crs)
                 .centroid
                 .to_crs(original_crs)
             )
+            # fmt: on
 
     @property
     def osm_extract_file(self):
