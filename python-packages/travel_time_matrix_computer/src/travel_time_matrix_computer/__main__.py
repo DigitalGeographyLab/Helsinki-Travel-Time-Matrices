@@ -54,14 +54,6 @@ def _parse_extent(extent):
                     extent = None
             except shapely.errors.ShapelyError:
                 extent = None
-
-    # TODO: this check should move into `TravelTimeMatrixComputer.run()`
-    if extent is None:
-        warnings.warn(
-            "No extent specified, using the extent of `origins_destinations`",
-            RuntimeWarning,
-        )
-
     return extent
 
 
