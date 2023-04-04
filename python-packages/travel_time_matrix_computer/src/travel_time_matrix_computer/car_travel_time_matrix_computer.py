@@ -7,8 +7,6 @@ data, compile output)"""
 
 import datetime
 import functools
-import pathlib
-import tempfile
 
 import r5py
 import car_speed_annotator
