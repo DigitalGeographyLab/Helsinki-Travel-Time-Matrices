@@ -1,0 +1,62 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0.0", "wheel"]
+
+[project]
+name = "travel_time_matrix_computer"
+description = "Wrap the entire DGL travel time matrix computation (read config, prepare data, compile output"
+readme = "README.md"
+
+authors = [
+    { name = "Christoph Fink", email = "christoph.fink@helsinki.fi" },
+]
+
+dependencies = [
+    "car_speed_annotator",
+    "cycling_speed_annotator",
+    "dateparser",
+    "geopandas",
+    "pandas",
+    "parking_times_calculator",
+    "pyaml",
+    "pyproj",
+    "r5py",
+    "shapely>=2",
+]
+requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+keywords = ["transport", "routing", "research", "car"]
+license = {text = "GPL-3.0-or-later"}
+
+dynamic = ["version"]
+
+[project.scripts]
+travel-time-matrix = "travel_time_matrix_computer.__main__:main"
+
+[project.optional-dependencies]
+tests = ["pytest", "pytest-asyncio", "pytest-cov", "pytest-lazy-fixture"]
+
+[project.urls]
+Repository = "https://github.com/DigitalGeographyLab/Helsinki-Travel-Time-Matrices.git"
+"Bug tracker" = "https://github.com/DigitalGeographyLab/Helsinki-Travel-Time-Matrices/issues"
+
+[tool.black]
+extend-exclude = "\\.virtualenv"
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:faulthandler --cov --cov-report term-missing"
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.setuptools.dynamic]
+version = {attr = "travel_time_matrix_computer.__version__"}

@@ -24,7 +24,7 @@ import osmium
 #   - average:      5:00-6:00, 9:00-10:00, 15:00-16:00,
 #                   17:00-18:00, 21:00-22:00
 #   - midday:       10:00-15:00
-#   - off-peak:     0:00-05:00
+#   - nighttime:     0:00-05:00
 #   - rush-hour:    7:00-9:00
 
 # The speed limits are in km/h, and the road classes refer
@@ -54,7 +54,7 @@ SPEED_COEFFICIENTS_BY_TIME_OF_DAY_AND_SPEED_LIMIT = {
         100: 0.971,
         120: 0.865833333,
     },
-    "off-peak": {
+    "nighttime": {
         20: 0.885,
         30: 0.893333333,
         40: 0.93,
@@ -82,7 +82,7 @@ SPEED_COEFFICIENTS_BY_TIME_OF_DAY_AND_SPEED_LIMIT = {
 SPEED_COEFFICIENTS_BY_TIME_OF_DAY_AND_ROAD_CLASS = {
     "average": {1: 0.927, 2: 0.965714286, 3: 0.878, 4: 0.853, 5: 0.7},
     "midday": {1: 0.937, 2: 0.975, 3: 0.886, 4: 0.857, 5: 0.692},
-    "off-peak": {1: 0.97, 2: 0.985, 3: 0.93375, 4: 0.913, 5: 0.753},
+    "nighttime": {1: 0.97, 2: 0.985, 3: 0.93375, 4: 0.913, 5: 0.753},
     "rush-hour": {1: 0.93, 2: 0.97, 3: 0.873, 4: 0.845, 5: 0.712},
 }
 
@@ -101,7 +101,7 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
         Arguments
         ---------
         time_of_day : str
-            one of `average`, `midday`, `off-peak`, or `rush-hour`
+            one of `average`, `midday`, `nighttime`, or `rush-hour`
         by : str
             use values categorised by the Digiroad road class, or the speed limit,
             one of `road_class` or `speed_limit` (default)
@@ -110,9 +110,9 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
         """
         super().__init__()
 
-        if time_of_day not in ("average", "midday", "off-peak", "rush-hour"):
+        if time_of_day not in ("average", "midday", "nighttime", "rush-hour"):
             raise ValueError(
-                "`time_of_day` must be one of `average`, `midday`, `off-peak`, or `rush-hour`"
+                "`time_of_day` must be one of `average`, `midday`, `nighttime`, or `rush-hour`"
             )
         self._time_of_day = time_of_day
 
