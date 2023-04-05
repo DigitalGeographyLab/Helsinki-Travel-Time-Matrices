@@ -22,6 +22,7 @@ dependencies = [
     "pyproj",
     "r5py",
     "shapely>=2",
+    "zstandard",
 ]
 requires-python = ">=3.10"
 

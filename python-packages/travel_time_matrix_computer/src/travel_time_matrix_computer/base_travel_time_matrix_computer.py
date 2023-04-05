@@ -35,10 +35,29 @@ class BaseTravelTimeMatrixComputer:
         self.extent = extent
         self.date = date
 
+        self.cycling_speeds = cycling_speeds
+        self.gtfs_data_sets = gtfs_data_sets
         self.osm_history_file = osm_history_file
         self.origins_destinations = origins_destinations
-        self.gtfs_data_sets = gtfs_data_sets
-        self.cycling_speeds = cycling_speeds
+
+    def add_access_times(self, travel_times):
+        """Add the times to walk from/to origin/destination to/from a snapped point."""
+        travel_times = travel_times.copy()
+        for which_end in ("from_id", "to_id"):
+            # fmt: off
+            travel_times = (
+                travel_times
+                .set_index(which_end)
+                .join(self.access_walking_times)
+                .reset_index(names=which_end)
+            )
+            travel_times.loc[
+                travel_times["travel_time"] != 0,  # origin == destination
+                "travel_time",
+            ] += travel_times["walking_time"]
+            # fmt: on
+            travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+        return travel_times
 
     @property
     def cycling_speeds(self):
@@ -102,7 +121,10 @@ class BaseTravelTimeMatrixComputer:
 
     @origins_destinations.setter
     def origins_destinations(self, value):
-        value = value.to_crs("EPSG:4326")
+        WORKING_CRS = "EPSG:4326"
+        EQUIDISTANT_CRS = self._good_enough_crs
+
+        value = value.to_crs(WORKING_CRS)
 
         # cut to extent (if applicable):
         if self.extent is None:
@@ -118,22 +140,47 @@ class BaseTravelTimeMatrixComputer:
         self.__origins_destinations = value.copy()
 
         # use centroid if not already points
-        self._origins_destinations = value.copy()
-        if self._origins_destinations.geom_type.unique().tolist() != ["Point"]:
-            original_crs = self._origins_destinations.crs
-            equidistant_crs = self._good_enough_crs
+        origins_destinations = value.copy()
+        if origins_destinations.geom_type.unique().tolist() != ["Point"]:
             # fmt: off
-            self._origins_destinations.geometry = (
-                self._origins_destinations.geometry
-                .to_crs(equidistant_crs)
+            origins_destinations.geometry = (
+                origins_destinations.geometry
+                .to_crs(EQUIDISTANT_CRS)
                 .centroid
-                .to_crs(original_crs)
+                .to_crs(WORKING_CRS)
             )
             # fmt: on
 
-    @property
-    def osm_extract_file(self):
-        return self._osm_extract_file
+        # snap to network, remember walking time (constant speed)
+        # from original point to snapped point
+        WALKING_SPEED = 3.6  # km/h
+        # fmt: off
+        origins_destinations["snapped_geometry"] = (
+            self.transport_network.snap_to_network(origins_destinations["geometry"])
+        )
+        origins_destinations["snapped_distance"] = (  # meters
+            origins_destinations.geometry.to_crs(EQUIDISTANT_CRS)
+            .distance(
+                origins_destinations.snapped_geometry.to_crs(EQUIDISTANT_CRS)
+            )
+        )
+        origins_destinations["walking_time"] = (  # minutes
+            origins_destinations["snapped_distance"]
+            / (WALKING_SPEED * 1000 / 60.0)
+        ).round(2)
+
+        self.access_walking_times = (
+            origins_destinations
+            [["id", "walking_time"]]
+            .copy()
+            .set_index("id")
+        )
+        self._origins_destinations = (
+            origins_destinations
+            [["id", "geometry"]]
+            .copy()
+        )
+        # fmt: on
 
     @property
     def osm_history_file(self):
@@ -153,8 +200,6 @@ class BaseTravelTimeMatrixComputer:
             )
 
             extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
-            # with open(extent_polygon, "w") as f:
-            #     f.write(shapely.to_geojson(self.extent))
             geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
             # fmt: off
@@ -167,6 +212,7 @@ class BaseTravelTimeMatrixComputer:
                     "--output", f"{osm_snapshot_filename}",
                     "--output-format", "osm.pbf",
                     "--overwrite",
+                    "--no-progress",
                 ]
             )
             subprocess.run(
@@ -179,11 +225,12 @@ class BaseTravelTimeMatrixComputer:
                     "--output", f"{osm_extract_filename}",
                     "--output-format", "osm.pbf",
                     "--overwrite",
+                    "--no-progress",
                 ]
             )
             # fmt: on
 
-        self._osm_extract_file = osm_extract_filename
+        self.osm_extract_file = osm_extract_filename
 
     @property
     def transport_network(self):

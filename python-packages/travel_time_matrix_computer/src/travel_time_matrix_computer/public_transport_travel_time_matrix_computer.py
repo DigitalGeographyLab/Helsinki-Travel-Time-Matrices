@@ -26,8 +26,11 @@ class PublicTransportTravelTimeMatrixComputer(
 
     def run(self):
         travel_times = None
+
         for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
             for variable_name, walking_speed in self.WALKING_SPEEDS.items():
+                column_name = f"pt_{timeslot_name[0]}_{variable_name}"
+
                 travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
                     self.transport_network,
                     origins=self.origins_destinations,
@@ -36,12 +39,12 @@ class PublicTransportTravelTimeMatrixComputer(
                     speed_walking=walking_speed,
                 )
 
-                column_name = f"pt_{timeslot_name[0]}_{variable_name}"
+                _travel_times = travel_time_matrix_computer.compute_travel_times()
+                _travel_times = self.add_access_times(_travel_times)
+
                 # fmt: off
                 _travel_times = (
-                    travel_time_matrix_computer.compute_travel_times()
-                    [["from_id", "to_id", "travel_time"]]
-                    .set_index(["from_id", "to_id"])
+                    _travel_times.set_index(["from_id", "to_id"])
                     .rename(columns={"travel_time": column_name})
                 )
                 # fmt: on
