@@ -19,8 +19,8 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
         """Save the results of a travel time matrix computation."""
         super().__init__()
 
-        self.travel_times = travel_times
-        self.origins_destinations = origins_destinations
+        self.travel_times = travel_times.reset_index(names=["from_id", "to_id"])
+        self.origins_destinations = origins_destinations.set_index("id")
         self.output_directory = pathlib.Path(output_directory)
         self.output_name_prefix = output_name_prefix
 
@@ -36,12 +36,28 @@ class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
 
 class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        pass
+        for to_id, group in self.travel_times.groupby("to_id"):
+            group.to_csv(
+                self.output_directory
+                / f"{self.output_name_prefix}_travel_times_to{to_id}.csv",
+                index=False,
+            )
 
 
 class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        pass
+        # fmt: off
+        travel_times_with_to_geom = (
+            self.travel_times.set_index("to_id")
+            .join(
+                self.origins_destinations.rename({"geometry": "to_geometry"})
+            )
+            .reset_index(names="to_id")
+        )
+        # fmt: on
+        travel_times_with_to_geom.to_file(
+            self.output_directory / f"{self.output_name_prefix}_travel_times.gpkg.zstd"
+        )
 
 
 class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
