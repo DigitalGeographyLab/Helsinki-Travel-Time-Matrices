@@ -24,6 +24,23 @@ __all__ = ["CarTravelTimeMatrixComputer"]
 class CarTravelTimeMatrixComputer(
     BaseTravelTimeMatrixComputer, MultiTemporalTravelTimeMatrixComputerMixin
 ):
+    def add_parking_times(self, travel_times):
+        """Add the time it takes to park the car at the destination."""
+        # fmt: off
+        travel_times = (
+            travel_times
+            .set_index("to_id")
+            .join(self.parking_times)
+            .reset_index(names="to_id")
+        )
+        travel_times.loc[
+            travel_times["travel_time"] != 0,
+            "travel_time"
+        ] += travel_times["parking_time"]
+        # fmt: on
+        travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+        return travel_times
+
     @functools.cached_property
     def parking_times(self):
         _parking_times_calculator = parking_times_calculator.ParkingTimesCalculator()
@@ -31,7 +48,7 @@ class CarTravelTimeMatrixComputer(
         parking_times["parking_time"] = parking_times.geometry.apply(
             _parking_times_calculator.parking_time
         )
-        parking_times = parking_times[["id", "parking_time"]].copy()
+        parking_times = parking_times.set_index("id")[["parking_time"]]
         return parking_times
 
     def run(self):
@@ -60,17 +77,12 @@ class CarTravelTimeMatrixComputer(
             )
 
             _travel_times = travel_time_matrix_computer.compute_travel_times()
+            _travel_times = self.add_access_times(_travel_times)
+            _travel_times = self.add_parking_times(_travel_times)
 
             # fmt: off
-            _travel_times = _travel_times.set_index("from_id")
-            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
-            _travel_times = _travel_times.set_index("to_id")
-            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
-            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.parking_times)["parking_time"]
-
             _travel_times = (
                 _travel_times.set_index(["from_id", "to_id"])
-                [["from_id", "to_id", "travel_time"]]
                 .rename(columns={"travel_time": column_name})
             )
             # fmt: on

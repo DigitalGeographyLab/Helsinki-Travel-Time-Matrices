@@ -7,7 +7,6 @@ data, compile output)"""
 
 import datetime
 import pathlib
-import warnings
 
 import dateparser
 import geopandas
@@ -16,6 +15,7 @@ import pyaml
 import shapely
 
 from .travel_time_matrix_computer import TravelTimeMatrixComputer
+from .travel_time_matrix_output_saver import TravelTimeMatrixOutputSaver
 
 
 __all__ = []
@@ -128,6 +128,14 @@ def main():
 
     travel_time_matrix_computer = TravelTimeMatrixComputer(**config)
     travel_times = travel_time_matrix_computer.run()
+
+    TravelTimeMatrixOutputSaver(
+        travel_times,
+        config["origins_destinations"],
+    ).save(
+        output_directory=(DATA_DIRECTORY / "output"),
+        output_name_prefix="Helsinki_TravelTimeMatrix_2023",
+    )
 
     travel_times.to_csv(DATA_DIRECTORY / "travel_times.csv.zst")
 

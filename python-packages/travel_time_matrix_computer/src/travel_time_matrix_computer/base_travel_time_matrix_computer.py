@@ -40,6 +40,25 @@ class BaseTravelTimeMatrixComputer:
         self.osm_history_file = osm_history_file
         self.origins_destinations = origins_destinations
 
+    def add_access_times(self, travel_times):
+        """Add the times to walk from/to origin/destination to/from a snapped point."""
+        travel_times = travel_times.copy()
+        for which_end in ("from_id", "to_id"):
+            # fmt: off
+            travel_times = (
+                travel_times
+                .set_index(which_end)
+                .join(self.access_walking_times)
+                .reset_index(names=which_end)
+            )
+            travel_times.loc[
+                travel_times["travel_time"] != 0,  # origin == destination
+                "travel_time",
+            ] += travel_times["walking_time"]
+            # fmt: on
+            travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+        return travel_times
+
     @property
     def cycling_speeds(self):
         return self._cycling_speeds
@@ -146,9 +165,9 @@ class BaseTravelTimeMatrixComputer:
             )
         )
         origins_destinations["walking_time"] = (  # minutes
-            (origins_destinations["snapped_distance"] / 1000.0)
-            / (WALKING_SPEED * 60.0)
-        )
+            origins_destinations["snapped_distance"]
+            / (WALKING_SPEED * 1000 / 60.0)
+        ).round(2)
 
         self.access_walking_times = (
             origins_destinations

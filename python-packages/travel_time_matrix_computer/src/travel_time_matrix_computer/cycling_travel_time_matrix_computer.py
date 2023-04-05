@@ -53,7 +53,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 self.cycling_speeds,
                 base_speed=cycling_speed,
             ).annotate(
-                self.original_osm_extract_file,
+                original_osm_extract_file,
                 annotated_osm_extract_file,
             )
             self.osm_extract_file = annotated_osm_extract_file
@@ -68,17 +68,11 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             )
 
             _travel_times = travel_time_matrix_computer.compute_travel_times()
+            _travel_times = self.add_access_times(_travel_times)
 
             # fmt: off
-            _travel_times = _travel_times.set_index("from_id")
-            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
-            _travel_times = _travel_times.set_index("to_id")
-            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
-            _travel_times["travel_time"] = _travel_times["travel_time"] + self.UNLOCKING_LOCKING_TIME
-
             _travel_times = (
                 _travel_times.set_index(["from_id", "to_id"])
-                [["from_id", "to_id", "travel_time"]]
                 .rename(columns={"travel_time": column_name})
             )
             # fmt: on
