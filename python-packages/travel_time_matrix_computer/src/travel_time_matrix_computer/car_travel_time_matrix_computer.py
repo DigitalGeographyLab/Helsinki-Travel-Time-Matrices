@@ -63,10 +63,10 @@ class CarTravelTimeMatrixComputer(
 
             # fmt: off
             _travel_times = _travel_times.set_index("from_id")
-            _travel_times["travel_time"] += _travel_times.join(self.access_walking_times)["walking_time"]
+            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
             _travel_times = _travel_times.set_index("to_id")
-            _travel_times["travel_time"] += _travel_times.join(self.access_walking_times)["walking_time"]
-            _travel_times["travel_time"] += _travel_times.join(self.parking_times)["parking_time"]
+            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.access_walking_times)["walking_time"]
+            _travel_times["travel_time"] = _travel_times["travel_time"] + _travel_times.join(self.parking_times)["parking_time"]
 
             _travel_times = (
                 _travel_times.set_index(["from_id", "to_id"])
