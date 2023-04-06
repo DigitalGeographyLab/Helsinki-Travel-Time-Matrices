@@ -21,6 +21,7 @@ __all__ = ["BaseTravelTimeMatrixComputer"]
 
 class BaseTravelTimeMatrixComputer:
     DEFAULT_TIME_OF_DAY = datetime.time(hour=12)
+    MAX_TIME = datetime.timedelta(hours=24)
 
     def __init__(
         self,
