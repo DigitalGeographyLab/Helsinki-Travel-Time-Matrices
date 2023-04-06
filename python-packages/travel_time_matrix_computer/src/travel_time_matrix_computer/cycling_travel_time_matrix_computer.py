@@ -65,6 +65,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                     self.date, self.DEFAULT_TIME_OF_DAY
                 ),
                 transport_modes=[r5py.LegMode.BICYCLE],
+                max_time=self.MAX_TIME,
             )
 
             _travel_times = travel_time_matrix_computer.compute_travel_times()
