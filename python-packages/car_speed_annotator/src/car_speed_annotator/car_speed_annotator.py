@@ -86,6 +86,21 @@ SPEED_COEFFICIENTS_BY_TIME_OF_DAY_AND_ROAD_CLASS = {
     "rush-hour": {1: 0.93, 2: 0.97, 3: 0.873, 4: 0.845, 5: 0.712},
 }
 
+# used for `maxspeed=walk`, cf. https://wiki.openstreetmap.org/wiki/Key:maxspeed#Values
+WALKING_SPEED = 10
+
+# Speed people drive on German motorways where there is no speed limit
+# This is the 75th percentile reported in:
+# Holthaus, T., Goebels, C. and Leerkamp, B. (2020) Evaluation of driven
+# speed on German motorways without speed limits – a new approach. Wupperal:
+# Bergische Universität Wuppertal: Lehr- und Forschungsgebiet für
+# Güterverkehrsplanung und Transportlogistik. Available at:
+# https://www.gut.uni-wuppertal.de/fileadmin/bauing/leerkamp/Homepage_alt/Downloads/202003_Tempolimit/20200305-Evaluation_speed_FCD.pdf.
+SPEED_DRIVEN_WHEN_NO_LIMIT = 130
+
+# Assigned only if the `maxspeed` tag cannot be read:
+DEFAULT_SPEED_LIMIT = 40
+
 
 class CarSpeedAnnotator(osmium.SimpleHandler):
     def __init__(
@@ -172,7 +187,7 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
                 ]
             )
         else:
-            # clamp it to known values
+            # clamp to known values
             _speed_limit = min(
                 SPEED_COEFFICIENTS_BY_TIME_OF_DAY_AND_SPEED_LIMIT["average"].keys(),
                 key=lambda x: abs(x - speed_limit),
@@ -213,7 +228,7 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
 
     def _get_speed_limit(self, tags: dict) -> int:
         # modelled after com.conveyal.r5.labeling.SpeedLabeler.getSpeedMS
-        speed_limit = 40  # default value
+        speed_limit = DEFAULT_SPEED_LIMIT
 
         if "maxspeed:motorcar" in tags:
             speed_limit = int(tags["maxspeed:motorcar"])
@@ -231,6 +246,14 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
             ]
             speed_limit = int(sum(_speed_limits) / len(_speed_limits))
         elif "maxspeed" in tags:
-            speed_limit = int(tags["maxspeed"])
+            try:
+                speed_limit = int(tags["maxspeed"])
+            except ValueError:
+                if tags["maxspeed"] == "walk":
+                    speed_limit = WALKING_SPEED
+                elif tags["maxspeed"] == "none":
+                    speed_limit = SPEED_DRIVEN_WHEN_NO_LIMIT
+                else:
+                    pass  # use default value
 
         return speed_limit
