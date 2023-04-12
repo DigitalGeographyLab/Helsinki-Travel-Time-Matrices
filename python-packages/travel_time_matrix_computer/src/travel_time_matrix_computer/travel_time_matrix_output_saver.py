@@ -4,8 +4,10 @@
 """Save the results of a travel time matrix computation in many file formats."""
 
 
+import geopandas
 import pathlib
 import threading
+import zipfile
 
 
 class BaseTravelTimeMatrixSaverThread(threading.Thread):
@@ -29,9 +31,39 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
 
 class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
+        DIRECTORY_NAME = "Helsinki_TravelTimeMatrix_2023"
+        output_directory = self.output_directory / DIRECTORY_NAME
+        for existing_file in output_directory.glob("*"):
+            existing_file.unlink()
+
         self.travel_times.to_csv(
-            self.output_directory / f"{self.output_name_prefix}_travel_times.csv.zst"
+            output_directory,
+            compression={
+                "method": "zstd",
+                "threads": -1,
+                "level": 12,
+                "write_checksum": True,
+            },
         )
+
+        archive_name = self.output_directory / f"{DIRECTORY_NAME}.zip"
+        try:
+            archive_name.unlink()
+        except FileNotFoundError:
+            pass
+        archive = zipfile.ZipFile(
+            archive_name,
+            mode="a",
+            compression=zipfile.ZIP_DEFLATED,
+            compresslevel=9
+        )
+        archive.mkdir(DIRECTORY_NAME)
+        for csv_file in output_directory.glob("*.csv"):
+            archive.write(
+                csv_file,
+                csv_file.relative_to(self.output_directory),
+            )
+            csv_file.unlink()
 
 
 class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
@@ -39,7 +71,7 @@ class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread)
         for to_id, group in self.travel_times.groupby("to_id"):
             group.to_csv(
                 self.output_directory
-                / f"{self.output_name_prefix}_travel_times_to{to_id}.csv",
+                / f"{self.output_name_prefix}_travel_times_to_{to_id}.csv",
                 index=False,
             )
 
@@ -47,7 +79,7 @@ class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread)
 class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
         # fmt: off
-        travel_times_with_to_geom = (
+        travel_times_with_to_geom = geopandas.GeoDataFrame(
             self.travel_times.set_index("to_id")
             .join(
                 self.origins_destinations.rename({"geometry": "to_geometry"})
