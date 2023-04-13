@@ -78,7 +78,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
 
             _travel_times = travel_time_matrix_computer.compute_travel_times()
             _travel_times = self.add_access_times(_travel_times)
-            _travel_times = self.add_unlocking_locking_times(travel_times)
+            _travel_times = self.add_unlocking_locking_times(_travel_times)
 
             # fmt: off
             _travel_times = (
