@@ -42,8 +42,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     def add_unlocking_locking_times(self, travel_times):
         """Add the time it takes to unlock the bike at the origin, and lock it at the destination."""
         travel_times.loc[
-            travel_times.from_id != travel_times.to_id,
-            "travel_time"
+            travel_times.from_id != travel_times.to_id, "travel_time"
         ] += self.UNLOCKING_LOCKING_TIME
         # fmt: on
         return travel_times

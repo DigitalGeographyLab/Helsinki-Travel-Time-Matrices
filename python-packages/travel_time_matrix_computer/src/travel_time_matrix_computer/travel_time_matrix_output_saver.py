@@ -47,7 +47,9 @@ class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
 class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
         with tempfile.TemporaryDirectory(dir=self.output_directory) as temp_directory:
-            output_directory = pathlib.Path(temp_directory) / f"{self.output_name_prefix}"
+            output_directory = (
+                pathlib.Path(temp_directory) / f"{self.output_name_prefix}"
+            )
             output_directory.mkdir()
             for to_id, group in self.travel_times.groupby("to_id"):
                 group.to_csv(
