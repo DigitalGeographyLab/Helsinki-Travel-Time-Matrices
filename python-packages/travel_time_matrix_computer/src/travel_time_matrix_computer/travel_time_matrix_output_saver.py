@@ -6,6 +6,7 @@
 
 import geopandas
 import pathlib
+import tempfile
 import threading
 import zipfile
 
@@ -31,49 +32,51 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
 
 class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        DIRECTORY_NAME = "Helsinki_TravelTimeMatrix_2023"
-        output_directory = self.output_directory / DIRECTORY_NAME
-        for existing_file in output_directory.glob("*"):
-            existing_file.unlink()
-
         self.travel_times.to_csv(
-            output_directory,
+            self.output_directory / "Helsinki_TravelTimeMatrix_2023.csv.zst",
             compression={
                 "method": "zstd",
                 "threads": -1,
                 "level": 12,
                 "write_checksum": True,
             },
+            index=False,
         )
-
-        archive_name = self.output_directory / f"{DIRECTORY_NAME}.zip"
-        try:
-            archive_name.unlink()
-        except FileNotFoundError:
-            pass
-        archive = zipfile.ZipFile(
-            archive_name,
-            mode="a",
-            compression=zipfile.ZIP_DEFLATED,
-            compresslevel=9
-        )
-        archive.mkdir(DIRECTORY_NAME)
-        for csv_file in output_directory.glob("*.csv"):
-            archive.write(
-                csv_file,
-                csv_file.relative_to(self.output_directory),
-            )
-            csv_file.unlink()
 
 
 class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        for to_id, group in self.travel_times.groupby("to_id"):
-            group.to_csv(
+        with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            for to_id, group in self.travel_times.groupby("to_id"):
+                group.to_csv(
+                    output_directory
+                    / f"{self.output_name_prefix}_travel_times_to_{to_id}.csv",
+                    index=False,
+                )
+
+            ARCHIVE_NAME = (
                 self.output_directory
-                / f"{self.output_name_prefix}_travel_times_to_{to_id}.csv",
-                index=False,
+                / f"{self.output_name_prefix}_travel_times.csv.zip"
             )
+            try:
+                ARCHIVE_NAME.unlink()
+            except FileNotFoundError:
+                pass
+
+            archive = zipfile.ZipFile(
+                ARCHIVE_NAME,
+                mode="a",
+                compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
+
+            archive.mkdir(f"{self.output_name_prefix}")
+            for csv_file in output_directory.glob("*.csv"):
+                archive.write(
+                    csv_file,
+                    csv_file.relative_to(self.output_directory),
+                )
+                csv_file.unlink()
 
 
 class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
@@ -81,11 +84,9 @@ class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThrea
         # fmt: off
         travel_times_with_to_geom = geopandas.GeoDataFrame(
             self.travel_times.set_index("to_id")
-            .join(
-                self.origins_destinations.rename({"geometry": "to_geometry"})
-            )
+            .join(self.origins_destinations)
             .reset_index(names="to_id")
-        )
+        ).rename({"geometry": "to_geometry"})
         # fmt: on
         travel_times_with_to_geom.to_file(
             self.output_directory / f"{self.output_name_prefix}_travel_times.gpkg.zstd"
@@ -94,12 +95,54 @@ class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThrea
 
 class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        pass
+        with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            self.origins_destinations.to_file(
+                output_directory / f"{self.output_name_prefix}_grid.shp"
+            )
+
+            ARCHIVE_NAME = (
+                self.output_directory / f"{self.output_name_prefix}_grid.shp.zip"
+            )
+            try:
+                ARCHIVE_NAME.unlink()
+            except FileNotFoundError:
+                pass
+
+            archive = zipfile.ZipFile(
+                ARCHIVE_NAME,
+                mode="a",
+                compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
+
+            for shp_part_file in output_directory.glob("*"):
+                archive.write(shp_part_file, shp_part_file.name)
+                shp_part_file.unlink()
 
 
 class GpkgOfGridOnly(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        pass
+        with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            GPKG_FILE = output_directory / f"{self.output_name_prefix}_grid.gpkg"
+            self.origins_destinations.to_file(GPKG_FILE)
+
+            ARCHIVE_NAME = (
+                self.output_directory / f"{self.output_name_prefix}_grid.gpkg.zip"
+            )
+            try:
+                ARCHIVE_NAME.unlink()
+            except FileNotFoundError:
+                pass
+
+            archive = zipfile.ZipFile(
+                ARCHIVE_NAME,
+                mode="a",
+                compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
+
+            archive.write(GPKG_FILE, GPKG_FILE.name)
+            GPKG_FILE.unlink()
 
 
 class GiantParquetTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
