@@ -81,21 +81,46 @@ class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread)
 
 class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
-        # fmt: off
-        travel_times_with_to_geom = geopandas.GeoDataFrame(
-            self.travel_times.set_index("to_id")
-            .join(self.origins_destinations)
-            .reset_index(names="to_id")
-        ).rename({"geometry": "to_geometry"})
-        # fmt: on
-        travel_times_with_to_geom.to_file(
-            self.output_directory / f"{self.output_name_prefix}_travel_times.gpkg.zstd"
-        )
+        with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            output_directory = pathlib.Path(output_directory)
+            GPKG_FILE = (
+                output_directory / f"{self.output_name_prefix}_travel_times.gpkg"
+            )
+
+            # fmt: off
+            travel_times_with_to_geom = geopandas.GeoDataFrame(
+                self.travel_times.set_index("to_id")
+                .join(self.origins_destinations)
+                .reset_index(names="to_id")
+            ).rename({"geometry": "to_geometry"})
+            # fmt: on
+            travel_times_with_to_geom.to_file(GPKG_FILE)
+            del travel_times_with_to_geom
+
+            ARCHIVE_NAME = (
+                self.output_directory
+                / f"{self.output_name_prefix}_travel_times.gpkg.zip"
+            )
+            try:
+                ARCHIVE_NAME.unlink()
+            except FileNotFoundError:
+                pass
+
+            archive = zipfile.ZipFile(
+                ARCHIVE_NAME,
+                mode="a",
+                compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            )
+
+            archive.write(GPKG_FILE, GPKG_FILE.name)
+            GPKG_FILE.unlink()
 
 
 class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
     def run(self):
         with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            output_directory = pathlib.Path(output_directory)
             self.origins_destinations.to_file(
                 output_directory / f"{self.output_name_prefix}_grid.shp"
             )
@@ -123,6 +148,7 @@ class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
 class GpkgOfGridOnly(BaseTravelTimeMatrixSaverThread):
     def run(self):
         with tempfile.TemporaryDirectory(dir=self.output_directory) as output_directory:
+            output_directory = pathlib.Path(output_directory)
             GPKG_FILE = output_directory / f"{self.output_name_prefix}_grid.gpkg"
             self.origins_destinations.to_file(GPKG_FILE)
 
