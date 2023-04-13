@@ -155,6 +155,7 @@ class BaseTravelTimeMatrixComputer:
         # snap to network, remember walking time (constant speed)
         # from original point to snapped point
         WALKING_SPEED = 3.6  # km/h
+
         # fmt: off
         origins_destinations["snapped_geometry"] = (
             self.transport_network.snap_to_network(origins_destinations["geometry"])
