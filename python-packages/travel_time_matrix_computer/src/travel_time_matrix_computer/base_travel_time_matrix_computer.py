@@ -53,8 +53,8 @@ class BaseTravelTimeMatrixComputer:
                 .reset_index(names=which_end)
             )
             travel_times.loc[
-                travel_times["travel_time"] != 0,  # origin == destination
-                "travel_time",
+                travel_times.from_id != travel_times.to_id,
+                "travel_time"
             ] += travel_times["walking_time"]
             # fmt: on
             travel_times = travel_times[["from_id", "to_id", "travel_time"]]

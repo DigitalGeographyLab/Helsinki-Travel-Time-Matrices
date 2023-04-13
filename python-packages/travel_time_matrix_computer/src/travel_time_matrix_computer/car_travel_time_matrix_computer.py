@@ -34,7 +34,7 @@ class CarTravelTimeMatrixComputer(
             .reset_index(names="to_id")
         )
         travel_times.loc[
-            travel_times["travel_time"] != 0,
+            travel_times.from_id != travel_times.to_id,
             "travel_time"
         ] += travel_times["parking_time"]
         # fmt: on
