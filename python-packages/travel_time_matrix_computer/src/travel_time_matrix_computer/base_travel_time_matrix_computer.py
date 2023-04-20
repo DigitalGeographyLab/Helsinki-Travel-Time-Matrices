@@ -43,7 +43,7 @@ class BaseTravelTimeMatrixComputer:
 
     def add_access_times(self, travel_times):
         """Add the times to walk from/to origin/destination to/from a snapped point."""
-        travel_times = travel_times.copy()
+        COLUMNS = travel_times.columns
         for which_end in ("from_id", "to_id"):
             # fmt: off
             travel_times = (
@@ -57,7 +57,7 @@ class BaseTravelTimeMatrixComputer:
                 "travel_time"
             ] += travel_times["walking_time"]
             # fmt: on
-            travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+            travel_times = travel_times[COLUMNS]
         return travel_times
 
     @property

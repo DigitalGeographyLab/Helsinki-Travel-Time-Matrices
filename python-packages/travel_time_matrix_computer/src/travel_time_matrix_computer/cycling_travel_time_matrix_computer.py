@@ -51,6 +51,12 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
         travel_times = None
         original_osm_extract_file = self.osm_extract_file
 
+        # TODO: how to get the distance, only once
+        # we only need to get cycling distance once (same - or is it?)
+
+        # first find distance, then the different travel times
+        # detailed_itinerarie
+
         for column_name, cycling_speed in self.CYCLING_SPEEDS.items():
             annotated_osm_extract_file = (
                 original_osm_extract_file.parent
@@ -72,7 +78,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 departure=datetime.datetime.combine(
                     self.date, self.DEFAULT_TIME_OF_DAY
                 ),
-                transport_modes=[r5py.LegMode.BICYCLE],
+                transport_modes=[r5py.TransportMode.BICYCLE],
                 max_time=self.MAX_TIME,
             )
 
