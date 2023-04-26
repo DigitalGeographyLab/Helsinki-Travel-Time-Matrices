@@ -9,26 +9,30 @@
 set +m -euo pipefail
 IFS=$'\n\t '
 
+R5PY_GIT_URL="https://github.com/christophfink/r5py.git@278-keep-geometry"
+#R5PY_GIT_URL="https://github.com/r5py/r5py.git"
+
+RUN_TESTS=false
 
 # 8. Install r5py into this unprivileged user’s ~/.local/
-#    and run its unit-tests
 sudo -u dgl /bin/bash <<EOF
     cd
-    pip install git+https://github.com/r5py/r5py.git
 
-    pip install pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+    pip install "git+${R5PY_GIT_URL}"
 
-    # clone source tree (with tests + test data)
-    git clone https://github.com/r5py/r5py.git
+    if [[ "${RUN_TESTS}" = true ]]; then
+        git clone "${R5PY_GIT_URL}"
+        cd r5py
 
-    # run tests
-    cd r5py
-    python -m pytest
+        python -m venv .virtualenv
+        source .virtualenv/bin/activate
+        pip install .[tests]
 
-    # delete source tree and uninstall test dependencies
-    cd
-    rm -R r5py
-    pip uninstall -y pytest pytest-asyncio pytest-cov pytest-lazy-fixture
+        python -m pytest
+
+        cd ..
+        rm -Rf r5py
+    fi
 EOF
 
 

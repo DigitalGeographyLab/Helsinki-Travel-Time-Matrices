@@ -31,7 +31,7 @@ class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 departure=datetime.datetime.combine(
                     self.date, self.DEFAULT_TIME_OF_DAY
                 ),
-                transport_modes=[r5py.LegMode.WALK],
+                transport_modes=[r5py.TransportMode.WALK],
                 speed_walking=walking_speed,
                 max_time=self.MAX_TIME,
             )

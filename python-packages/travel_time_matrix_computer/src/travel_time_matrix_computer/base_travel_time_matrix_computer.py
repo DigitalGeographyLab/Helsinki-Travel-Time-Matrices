@@ -43,7 +43,7 @@ class BaseTravelTimeMatrixComputer:
 
     def add_access_times(self, travel_times):
         """Add the times to walk from/to origin/destination to/from a snapped point."""
-        travel_times = travel_times.copy()
+        COLUMNS = travel_times.columns
         for which_end in ("from_id", "to_id"):
             # fmt: off
             travel_times = (
@@ -53,11 +53,11 @@ class BaseTravelTimeMatrixComputer:
                 .reset_index(names=which_end)
             )
             travel_times.loc[
-                travel_times["travel_time"] != 0,  # origin == destination
-                "travel_time",
+                travel_times.from_id != travel_times.to_id,
+                "travel_time"
             ] += travel_times["walking_time"]
             # fmt: on
-            travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+            travel_times = travel_times[COLUMNS]
         return travel_times
 
     @property
@@ -155,6 +155,7 @@ class BaseTravelTimeMatrixComputer:
         # snap to network, remember walking time (constant speed)
         # from original point to snapped point
         WALKING_SPEED = 3.6  # km/h
+
         # fmt: off
         origins_destinations["snapped_geometry"] = (
             self.transport_network.snap_to_network(origins_destinations["geometry"])
