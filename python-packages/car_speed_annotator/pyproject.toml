@@ -3,7 +3,7 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools>=61.0.0", "wheel"]
 
 [project]
-name = "cycling_speed_annotator"
+name = "car_speed_annotator"
 description = "Add custom tags to OSM extracts for DGL’s travel time matrices"
 readme = "README.md"
 
@@ -13,7 +13,6 @@ authors = [
 
 dependencies = [
     "osmium",
-    "pandas",
 ]
 requires-python = ">=3.10"
 
@@ -23,7 +22,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
-keywords = ["transport", "routing", "research", "cycling"]
+keywords = ["transport", "routing", "research", "car"]
 license = {text = "GPL-3.0-or-later"}
 
 dynamic = ["version"]
@@ -45,4 +44,4 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 
 [tool.setuptools.dynamic]
-version = {attr = "cycling_speed_annotator.__version__"}
+version = {attr = "car_speed_annotator.__version__"}

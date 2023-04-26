@@ -27,13 +27,33 @@ pacman --noconfirm \
 # 3. Install some Python (etc.) packages system-wide (better runtime performance)
 pacman --noconfirm \
     -S \
-        jdk-openjdk \
+        jdk11-openjdk \
         python-fiona \
         python-geopandas \
         python-joblib \
         python-pyproj \
         python-requests \
-        python-shapely
+        python-shapely \
+        vim
+
+# 3½. Install GDAL’s dependencies, so it does not spam the console
+# (cf. https://bugs.archlinux.org/index.php?do=details&task_id=75749 )
+pacman --noconfirm \
+    -S \
+        --asdeps \
+            arrow \
+            cfitsio \
+            hdf5 \
+            libheif \
+            libjxl \
+            libwebp \
+            mariadb-libs \
+            netcdf \
+            openexr \
+            openjpeg2 \
+            podofo \
+            poppler \
+            postgresql-libs
 
 
 # 4. Create a user to compile additional packages, allow it to run `sudo pacman`
@@ -42,6 +62,7 @@ echo "aurbuilder ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/10-aurbuilder
 
 
 # 5. Install dependencies from the AUR
+echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
 sudo -u aurbuilder /bin/bash <<EOF
 
     cd
@@ -78,35 +99,5 @@ rm -v /etc/sudoers.d/10-aurbuilder
 useradd --create-home dgl
 
 
-# 8. Install r5py into this unprivileged user’s ~/.local/
-#    and run its unit-tests
-sudo -u dgl /bin/bash <<EOF
-    cd
-    pip install git+https://github.com/r5py/r5py.git
-
-    pip install pytest pytest-asyncio pytest-cov pytest-lazy-fixture
-
-    # clone source tree (with tests + test data)
-    git clone https://github.com/r5py/r5py.git
-
-    # run tests
-    cd r5py
-    python -m pytest
-
-    # delete source tree and uninstall test dependencies
-    cd
-    rm -R r5py
-    pip uninstall pytest pytest-asyncio pytest-cov pytest-lazy-fixture
-EOF
-
-
-# 9. Clean pacman cache, and uninstall unneeded packages
-paccache -rk0
-while (pacman -Qttdq | pacman --noconfirm -Rsndc -)
-    do
-        sleep 0.1
-    done
-
-
-# 10. Clean-up: remove ourselves
+# 99. Clean-up: remove ourselves
 rm -v -- "${BASH_SOURCE[0]}"
