@@ -69,7 +69,21 @@ class CarTravelTimeMatrixComputer(
             )
             self.osm_extract_file = annotated_osm_extract_file
 
+<<<<<<< Updated upstream
             travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
+=======
+            # travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
+            #     transport_network=self.transport_network,
+            #     origins=self.origins_destinations,
+            #     departure=datetime.datetime.combine(self.date, timeslot_time),
+            #     transport_modes=[r5py.TransportMode.CAR],
+            #     max_time=self.MAX_TIME,
+            # )
+
+            # _travel_times = travel_time_matrix_computer.compute_travel_times()
+
+            detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
+>>>>>>> Stashed changes
                 transport_network=self.transport_network,
                 origins=self.origins_destinations,
                 departure=datetime.datetime.combine(self.date, timeslot_time),
@@ -77,7 +91,17 @@ class CarTravelTimeMatrixComputer(
                 max_time=self.MAX_TIME,
             )
 
+<<<<<<< Updated upstream
             _travel_times = travel_time_matrix_computer.compute_travel_times()
+=======
+            _travel_times = detailed_itineraries_computer.compute_travel_details()
+
+            # Summarise the detailed itineraries:
+            _travel_times = self.summarise_detailed_itineraries(_travel_times)
+
+            # Add times spent walking from the original point to the snapped points,
+            # and for finding a parking spot
+>>>>>>> Stashed changes
             _travel_times = self.add_access_times(_travel_times)
             _travel_times = self.add_parking_times(_travel_times)
 

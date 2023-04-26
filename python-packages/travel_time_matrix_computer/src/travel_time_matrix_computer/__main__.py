@@ -95,6 +95,7 @@ def read_config(config_file=CONFIG_FILE):
         _parse_path(config["origins_destinations"])
     )
     config["date"] = _parse_date(config["date"])
+    config["output_prefix"] = str(config["output_prefix"])
 
     # optional
     try:
@@ -134,7 +135,7 @@ def main():
         config["origins_destinations"],
     ).save(
         output_directory=(DATA_DIRECTORY / "output"),
-        output_name_prefix="Helsinki_TravelTimeMatrix_2023",
+        output_name_prefix=config["output_prefix"],
     )
 
     travel_times.to_csv(DATA_DIRECTORY / "travel_times.csv.zst")

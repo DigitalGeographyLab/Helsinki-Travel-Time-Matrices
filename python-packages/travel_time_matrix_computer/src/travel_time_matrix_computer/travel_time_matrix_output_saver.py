@@ -30,7 +30,18 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
 class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
         self.travel_times.to_csv(
+<<<<<<< Updated upstream
             self.output_directory / f"{self.output_name_prefix}_travel_times.csv.zst"
+=======
+            self.output_directory / f"{self.output_name_prefix}.csv.zst",
+            compression={
+                "method": "zstd",
+                "threads": -1,
+                "level": 12,
+                "write_checksum": True,
+            },
+            index=False,
+>>>>>>> Stashed changes
         )
 
 
