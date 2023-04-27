@@ -26,6 +26,7 @@ class CarTravelTimeMatrixComputer(
 ):
     def add_parking_times(self, travel_times):
         """Add the time it takes to park the car at the destination."""
+        COLUMNS = travel_times.columns
         # fmt: off
         travel_times = (
             travel_times
@@ -34,11 +35,11 @@ class CarTravelTimeMatrixComputer(
             .reset_index(names="to_id")
         )
         travel_times.loc[
-            travel_times["travel_time"] != 0,
+            travel_times.from_id != travel_times.to_id,
             "travel_time"
         ] += travel_times["parking_time"]
         # fmt: on
-        travel_times = travel_times[["from_id", "to_id", "travel_time"]]
+        travel_times = travel_times[COLUMNS]
         return travel_times
 
     @functools.cached_property
@@ -56,7 +57,7 @@ class CarTravelTimeMatrixComputer(
         original_osm_extract_file = self.osm_extract_file
 
         for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
-            column_name = f"car_{timeslot_name[0]}"
+            column_suffix = timeslot_name[0]
 
             annotated_osm_extract_file = (
                 original_osm_extract_file.parent
@@ -68,16 +69,6 @@ class CarTravelTimeMatrixComputer(
                 annotated_osm_extract_file,
             )
             self.osm_extract_file = annotated_osm_extract_file
-
-            # travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
-            #     transport_network=self.transport_network,
-            #     origins=self.origins_destinations,
-            #     departure=datetime.datetime.combine(self.date, timeslot_time),
-            #     transport_modes=[r5py.TransportMode.CAR],
-            #     max_time=self.MAX_TIME,
-            # )
-
-            # _travel_times = travel_time_matrix_computer.compute_travel_times()
 
             detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
                 transport_network=self.transport_network,
@@ -100,7 +91,12 @@ class CarTravelTimeMatrixComputer(
             # fmt: off
             _travel_times = (
                 _travel_times.set_index(["from_id", "to_id"])
-                .rename(columns={"travel_time": column_name})
+                .rename(
+                    columns={
+                        "travel_time": f"car_{column_suffix}",
+                        "distance": f"car_{column_suffix}_d",
+                    }
+                )
             )
             # fmt: on
 

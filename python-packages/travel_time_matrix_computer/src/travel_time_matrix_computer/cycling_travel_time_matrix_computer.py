@@ -41,9 +41,23 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
 
         print("cycling_speeds: ", self.CYCLING_SPEEDS)
 
+    def add_unlocking_locking_times(self, travel_times):
+        """Add the time it takes to unlock the bike at the origin, and lock it at the destination."""
+        travel_times.loc[
+            travel_times.from_id != travel_times.to_id, "travel_time"
+        ] += self.UNLOCKING_LOCKING_TIME
+        # fmt: on
+        return travel_times
+
     def run(self):
         travel_times = None
         original_osm_extract_file = self.osm_extract_file.copy()
+
+        # TODO: how to get the distance, only once
+        # we only need to get cycling distance once (same - or is it?)
+
+        # first find distance, then the different travel times
+        # detailed_itinerarie
 
         for column_name, cycling_speed in self.CYCLING_SPEEDS.items():
             annotated_osm_extract_file = (
@@ -95,6 +109,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             # Add times spent walking from the original point to the snapped points,
             # and for unlocking+locking the bike
             _travel_times = self.add_access_times(_travel_times)
+            _travel_times = self.add_unlocking_locking_times(_travel_times)
 
             # fmt: off
             _travel_times = (
