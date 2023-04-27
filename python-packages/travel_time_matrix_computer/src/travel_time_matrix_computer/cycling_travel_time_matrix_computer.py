@@ -73,15 +73,10 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
                 transport_network=self.transport_network,
                 origins=self.origins_destinations,
-<<<<<<< Updated upstream
                 departure=datetime.datetime.combine(
                     self.date, self.DEFAULT_TIME_OF_DAY
                 ),
                 transport_modes=[r5py.LegMode.BICYCLE],
-=======
-                departure=datetime.datetime.combine(self.date, self.DEFAULT_TIME_OF_DAY),
-                transport_modes=[r5py.TransportMode.BICYCLE],
->>>>>>> Stashed changes
                 max_time=self.MAX_TIME,
             )
 
