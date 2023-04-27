@@ -35,7 +35,7 @@ class PublicTransportTravelTimeMatrixComputer(
                     self.transport_network,
                     origins=self.origins_destinations,
                     departure=datetime.datetime.combine(self.date, timeslot_time),
-                    transport_modes=[r5py.LegMode.TRANSIT],
+                    transport_modes=[r5py.TransportMode.TRANSIT],
                     speed_walking=walking_speed,
                     max_time=self.MAX_TIME,
                 )

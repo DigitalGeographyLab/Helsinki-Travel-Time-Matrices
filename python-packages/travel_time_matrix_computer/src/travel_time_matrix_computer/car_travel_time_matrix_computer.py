@@ -83,7 +83,7 @@ class CarTravelTimeMatrixComputer(
                 transport_network=self.transport_network,
                 origins=self.origins_destinations,
                 departure=datetime.datetime.combine(self.date, timeslot_time),
-                transport_modes=[r5py.LegMode.CAR],
+                transport_modes=[r5py.TransportMode.CAR],
                 max_time=self.MAX_TIME,
             )
 

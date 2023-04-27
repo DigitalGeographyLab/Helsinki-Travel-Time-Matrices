@@ -39,14 +39,21 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 self.CYCLING_SPEEDS["bike_slo"] + self.CYCLING_SPEEDS["bike_fst"]
             ) / 2.0
 
+        print("cycling_speeds: ", self.CYCLING_SPEEDS)
+
     def run(self):
         travel_times = None
-        original_osm_extract_file = self.osm_extract_file
+        original_osm_extract_file = self.osm_extract_file.copy()
 
         for column_name, cycling_speed in self.CYCLING_SPEEDS.items():
             annotated_osm_extract_file = (
                 original_osm_extract_file.parent
                 / f"{original_osm_extract_file.stem}_{column_name}.osm.pbf"
+            )
+
+            print(
+                f"Now computing cycling times for column {column_name} "
+                "at speed {cycling_speed} km/h"
             )
 
             cycling_speed_annotator.CyclingSpeedAnnotator(
@@ -76,7 +83,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 departure=datetime.datetime.combine(
                     self.date, self.DEFAULT_TIME_OF_DAY
                 ),
-                transport_modes=[r5py.LegMode.BICYCLE],
+                transport_modes=[r5py.TransportMode.BICYCLE],
                 max_time=self.MAX_TIME,
             )
 
@@ -107,6 +114,6 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 travel_times = travel_times.join(_travel_times)
 
             annotated_osm_extract_file.unlink()
-            self.osm_extract_file = original_osm_extract_file
+            self.osm_extract_file = original_osm_extract_file.copy()
 
         return travel_times

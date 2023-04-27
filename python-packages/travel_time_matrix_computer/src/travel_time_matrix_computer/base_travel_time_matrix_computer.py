@@ -31,6 +31,8 @@ class BaseTravelTimeMatrixComputer:
         gtfs_data_sets=[],
         cycling_speeds=None,
         extent=None,
+        *args,
+        **kwargs,
     ):
         # constraints for other layers
         self.extent = extent
