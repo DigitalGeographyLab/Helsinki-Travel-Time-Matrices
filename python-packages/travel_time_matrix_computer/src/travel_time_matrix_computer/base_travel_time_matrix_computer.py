@@ -31,6 +31,7 @@ class BaseTravelTimeMatrixComputer:
         gtfs_data_sets=[],
         cycling_speeds=None,
         extent=None,
+        calculate_distances=False,
         *args,
         **kwargs,
     ):
@@ -38,6 +39,7 @@ class BaseTravelTimeMatrixComputer:
         self.extent = extent
         self.date = date
 
+        self.calculate_distances = calculate_distances
         self.cycling_speeds = cycling_speeds
         self.gtfs_data_sets = gtfs_data_sets
         self.osm_history_file = osm_history_file
@@ -206,33 +208,34 @@ class BaseTravelTimeMatrixComputer:
             extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
             geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
-            # fmt: off
-            subprocess.run(
-                [
-                    "/usr/bin/osmium",
-                    "time-filter",
-                    f"{osm_history_file}",
-                    f"{osm_snapshot_datetime}",
-                    "--output", f"{osm_snapshot_filename}",
-                    "--output-format", "osm.pbf",
-                    "--overwrite",
-                    "--no-progress",
-                ]
-            )
-            subprocess.run(
-                [
-                    "/usr/bin/osmium",
-                    "extract",
-                    "--strategy", "complete_ways",
-                    "--polygon", f"{extent_polygon}",
-                    f"{osm_snapshot_filename}",
-                    "--output", f"{osm_extract_filename}",
-                    "--output-format", "osm.pbf",
-                    "--overwrite",
-                    "--no-progress",
-                ]
-            )
-            # fmt: on
+            if not osm_extract_filename.exists():
+                # fmt: off
+                subprocess.run(
+                    [
+                        "/usr/bin/osmium",
+                        "time-filter",
+                        f"{osm_history_file}",
+                        f"{osm_snapshot_datetime}",
+                        "--output", f"{osm_snapshot_filename}",
+                        "--output-format", "osm.pbf",
+                        "--overwrite",
+                        "--no-progress",
+                    ]
+                )
+                subprocess.run(
+                    [
+                        "/usr/bin/osmium",
+                        "extract",
+                        "--strategy", "complete_ways",
+                        "--polygon", f"{extent_polygon}",
+                        f"{osm_snapshot_filename}",
+                        "--output", f"{osm_extract_filename}",
+                        "--output-format", "osm.pbf",
+                        "--overwrite",
+                        "--no-progress",
+                    ]
+                )
+                # fmt: on
 
         self.osm_extract_file = osm_extract_filename
 

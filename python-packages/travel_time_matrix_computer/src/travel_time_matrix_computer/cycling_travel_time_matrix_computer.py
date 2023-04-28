@@ -39,8 +39,6 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 self.CYCLING_SPEEDS["bike_slo"] + self.CYCLING_SPEEDS["bike_fst"]
             ) / 2.0
 
-        print("cycling_speeds: ", self.CYCLING_SPEEDS)
-
     def add_unlocking_locking_times(self, travel_times):
         """Add the time it takes to unlock the bike at the origin, and lock it at the destination."""
         travel_times.loc[
@@ -74,32 +72,33 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             )
             self.osm_extract_file = annotated_osm_extract_file
 
-            # travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
-            #     transport_network=self.transport_network,
-            #     origins=self.origins_destinations,
-            #     departure=datetime.datetime.combine(
-            #         self.date, self.DEFAULT_TIME_OF_DAY
-            #     ),
-            #     transport_modes=[r5py.TransportMode.BICYCLE],
-            #     max_time=self.MAX_TIME,
-            # )
+            if self.calculate_distances:
+                detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
+                    transport_network=self.transport_network,
+                    origins=self.origins_destinations,
+                    departure=datetime.datetime.combine(
+                        self.date, self.DEFAULT_TIME_OF_DAY
+                    ),
+                    transport_modes=[r5py.TransportMode.BICYCLE],
+                    max_time=self.MAX_TIME,
+                )
+                _travel_times = detailed_itineraries_computer.compute_travel_details()
 
-            # _travel_times = travel_time_matrix_computer.compute_travel_times()
+                # Summarise the detailed itineraries:
+                _travel_times = self.summarise_detailed_itineraries(_travel_times)
 
-            detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
-                transport_network=self.transport_network,
-                origins=self.origins_destinations,
-                departure=datetime.datetime.combine(
-                    self.date, self.DEFAULT_TIME_OF_DAY
-                ),
-                transport_modes=[r5py.TransportMode.BICYCLE],
-                max_time=self.MAX_TIME,
-            )
+            else:
+                travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
+                    transport_network=self.transport_network,
+                    origins=self.origins_destinations,
+                    departure=datetime.datetime.combine(
+                        self.date, self.DEFAULT_TIME_OF_DAY
+                    ),
+                    transport_modes=[r5py.TransportMode.BICYCLE],
+                    max_time=self.MAX_TIME,
+                )
 
-            _travel_times = detailed_itineraries_computer.compute_travel_details()
-
-            # Summarise the detailed itineraries:
-            _travel_times = self.summarise_detailed_itineraries(_travel_times)
+                _travel_times = travel_time_matrix_computer.compute_travel_times()
 
             # Add times spent walking from the original point to the snapped points,
             # and for unlocking+locking the bike

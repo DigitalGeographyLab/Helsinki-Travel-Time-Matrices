@@ -99,11 +99,15 @@ def read_config(config_file=CONFIG_FILE):
 
     # optional
     try:
+        config["calculate_distances"] = bool(config["calculate_distances"])
+    except KeyError:
+        config["calculate_distances"] = False
+    try:
         config["cycling_speeds"] = pandas.read_csv(
             _parse_path(config["cycling_speeds"])
         )
     except KeyError:
-        config["cycling_speeds"] = None
+        config["cycling_speeds"] = pandas.DataFrame({"osm_id": [], "speed": []})
     try:
         config["extent"] = _parse_extent(config["extent"])
     except KeyError:
