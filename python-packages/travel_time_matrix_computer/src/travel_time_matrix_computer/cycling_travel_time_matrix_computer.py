@@ -51,7 +51,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
 
     def run(self):
         travel_times = None
-        original_osm_extract_file = self.osm_extract_file.copy()
+        original_osm_extract_file = self.osm_extract_file
 
         # TODO: how to get the distance, only once
         # we only need to get cycling distance once (same - or is it?)
@@ -63,11 +63,6 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             annotated_osm_extract_file = (
                 original_osm_extract_file.parent
                 / f"{original_osm_extract_file.stem}_{column_name}.osm.pbf"
-            )
-
-            print(
-                f"Now computing cycling times for column {column_name} "
-                "at speed {cycling_speed} km/h"
             )
 
             cycling_speed_annotator.CyclingSpeedAnnotator(
@@ -129,6 +124,6 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 travel_times = travel_times.join(_travel_times)
 
             annotated_osm_extract_file.unlink()
-            self.osm_extract_file = original_osm_extract_file.copy()
+            self.osm_extract_file = original_osm_extract_file
 
         return travel_times
