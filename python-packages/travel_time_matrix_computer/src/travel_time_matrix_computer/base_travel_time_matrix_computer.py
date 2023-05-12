@@ -179,6 +179,8 @@ class BaseTravelTimeMatrixComputer:
             / WALKING_SPEED
         ).round(2)
 
+        print(origins_destinations[["walking_time", "snapped_distance"]].describe())
+
         self.access_walking_times = (
             origins_destinations
             [["id", "walking_time"]]
