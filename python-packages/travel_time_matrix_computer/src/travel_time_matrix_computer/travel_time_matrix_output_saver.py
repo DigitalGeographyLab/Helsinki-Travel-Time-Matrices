@@ -4,11 +4,13 @@
 """Save the results of a travel time matrix computation in many file formats."""
 
 
-import geopandas
 import pathlib
+import sqlite3
 import tempfile
 import threading
 import zipfile
+
+import geopandas
 
 
 class BaseTravelTimeMatrixSaverThread(threading.Thread):
@@ -33,7 +35,7 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
 class GiantCsvTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
     def run(self):
         self.travel_times.to_csv(
-            self.output_directory / "Helsinki_TravelTimeMatrix_2023.csv.zst",
+            self.output_directory / f"{self.output_name_prefix}.csv.zst",
             compression={
                 "method": "zstd",
                 "threads": -1,
@@ -100,6 +102,16 @@ class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThrea
             # fmt: on
             travel_times_with_to_geom.to_file(GPKG_FILE)
             del travel_times_with_to_geom
+
+            with sqlite3.connect(GPKG_FILE) as db_connection:
+                db_connection.execute(
+                    "CREATE INDEX IF NOT EXISTS travel_times_from_id "
+                    f"ON {self.output_name_prefix}_travel_times (from_id);"
+                )
+                db_connection.execute(
+                    "CREATE INDEX IF NOT EXISTS travel_times_to_id "
+                    f"ON {self.output_name_prefix}_travel_times (to_id);"
+                )
 
             ARCHIVE_NAME = (
                 self.output_directory

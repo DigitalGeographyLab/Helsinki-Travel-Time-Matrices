@@ -31,11 +31,15 @@ class BaseTravelTimeMatrixComputer:
         gtfs_data_sets=[],
         cycling_speeds=None,
         extent=None,
+        calculate_distances=False,
+        *args,
+        **kwargs,
     ):
         # constraints for other layers
         self.extent = extent
         self.date = date
 
+        self.calculate_distances = calculate_distances
         self.cycling_speeds = cycling_speeds
         self.gtfs_data_sets = gtfs_data_sets
         self.osm_history_file = osm_history_file
@@ -123,7 +127,6 @@ class BaseTravelTimeMatrixComputer:
     @origins_destinations.setter
     def origins_destinations(self, value):
         WORKING_CRS = "EPSG:4326"
-        EQUIDISTANT_CRS = self._good_enough_crs
 
         value = value.to_crs(WORKING_CRS)
 
@@ -136,6 +139,8 @@ class BaseTravelTimeMatrixComputer:
             )
         else:
             value = value[value.geometry.within(self.extent)]
+
+        EQUIDISTANT_CRS = self._good_enough_crs
 
         # remember original for joining output back
         self.__origins_destinations = value.copy()
@@ -154,7 +159,10 @@ class BaseTravelTimeMatrixComputer:
 
         # snap to network, remember walking time (constant speed)
         # from original point to snapped point
-        WALKING_SPEED = 3.6  # km/h
+        WALKING_SPEED = (
+            3.6  # km/h
+            * 1000.0 / 60.0  # -> meters/minute
+        )
 
         # fmt: off
         origins_destinations["snapped_geometry"] = (
@@ -168,8 +176,10 @@ class BaseTravelTimeMatrixComputer:
         )
         origins_destinations["walking_time"] = (  # minutes
             origins_destinations["snapped_distance"]
-            / (WALKING_SPEED * 1000 / 60.0)
+            / WALKING_SPEED
         ).round(2)
+
+        print(origins_destinations[["walking_time", "snapped_distance"]].describe())
 
         self.access_walking_times = (
             origins_destinations
@@ -204,35 +214,66 @@ class BaseTravelTimeMatrixComputer:
             extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
             geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
-            # fmt: off
-            subprocess.run(
-                [
-                    "/usr/bin/osmium",
-                    "time-filter",
-                    f"{osm_history_file}",
-                    f"{osm_snapshot_datetime}",
-                    "--output", f"{osm_snapshot_filename}",
-                    "--output-format", "osm.pbf",
-                    "--overwrite",
-                    "--no-progress",
-                ]
-            )
-            subprocess.run(
-                [
-                    "/usr/bin/osmium",
-                    "extract",
-                    "--strategy", "complete_ways",
-                    "--polygon", f"{extent_polygon}",
-                    f"{osm_snapshot_filename}",
-                    "--output", f"{osm_extract_filename}",
-                    "--output-format", "osm.pbf",
-                    "--overwrite",
-                    "--no-progress",
-                ]
-            )
-            # fmt: on
+            if not osm_extract_filename.exists():
+                # fmt: off
+                subprocess.run(
+                    [
+                        "/usr/bin/osmium",
+                        "time-filter",
+                        f"{osm_history_file}",
+                        f"{osm_snapshot_datetime}",
+                        "--output", f"{osm_snapshot_filename}",
+                        "--output-format", "osm.pbf",
+                        "--overwrite",
+                        "--no-progress",
+                    ]
+                )
+                subprocess.run(
+                    [
+                        "/usr/bin/osmium",
+                        "extract",
+                        "--strategy", "complete_ways",
+                        "--polygon", f"{extent_polygon}",
+                        f"{osm_snapshot_filename}",
+                        "--output", f"{osm_extract_filename}",
+                        "--output-format", "osm.pbf",
+                        "--overwrite",
+                        "--no-progress",
+                    ]
+                )
+                # fmt: on
 
         self.osm_extract_file = osm_extract_filename
+
+    @staticmethod
+    def summarise_detailed_itineraries(travel_times):
+        # (1) convert travel time into a scalar, pandas seems to unable to
+        # `sum()` `datetime`s
+        travel_times["travel_time"] = travel_times["travel_time"].apply(
+            lambda tt: tt.total_seconds() / 60.0
+        )
+
+        # (2) combine the travel time and distance of individual segments (per travel option)
+        # fmt: off
+        travel_times = (
+            travel_times
+            .groupby(["from_id", "to_id", "option"])[["travel_time", "distance"]]
+            .sum()
+            .reset_index()
+        )
+        # fmt: on
+
+        # (3) find the minimum travel time for each O/D-pair (between the different options),
+        #     keep the row with the minimum travel time -> one record per O/D-pair
+        travel_times = travel_times.loc[
+            travel_times.groupby(["from_id", "to_id"]).distance.idxmin()
+        ]
+
+        # (4) round the columns to two digits, that’s more than enough
+        for column in ("travel_time", "distance"):
+            travel_times[column] = travel_times[column].round(2)
+
+        return travel_times[["from_id", "to_id", "travel_time", "distance"]].copy()
 
     @property
     def transport_network(self):

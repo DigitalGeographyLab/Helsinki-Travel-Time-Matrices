@@ -95,14 +95,19 @@ def read_config(config_file=CONFIG_FILE):
         _parse_path(config["origins_destinations"])
     )
     config["date"] = _parse_date(config["date"])
+    config["output_prefix"] = str(config["output_prefix"])
 
     # optional
+    try:
+        config["calculate_distances"] = bool(config["calculate_distances"])
+    except KeyError:
+        config["calculate_distances"] = False
     try:
         config["cycling_speeds"] = pandas.read_csv(
             _parse_path(config["cycling_speeds"])
         )
     except KeyError:
-        config["cycling_speeds"] = None
+        config["cycling_speeds"] = pandas.DataFrame({"osm_id": [], "speed": []})
     try:
         config["extent"] = _parse_extent(config["extent"])
     except KeyError:
@@ -134,7 +139,7 @@ def main():
         config["origins_destinations"],
     ).save(
         output_directory=(DATA_DIRECTORY / "output"),
-        output_name_prefix="Helsinki_TravelTimeMatrix_2023",
+        output_name_prefix=config["output_prefix"],
     )
 
     travel_times.to_csv(DATA_DIRECTORY / "travel_times.csv.zst")

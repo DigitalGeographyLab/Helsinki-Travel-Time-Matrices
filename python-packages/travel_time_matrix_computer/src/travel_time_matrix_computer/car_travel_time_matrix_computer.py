@@ -70,33 +70,28 @@ class CarTravelTimeMatrixComputer(
             )
             self.osm_extract_file = annotated_osm_extract_file
 
-            detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
-                transport_network=self.transport_network,
-                origins=self.origins_destinations,
-                departure=datetime.datetime.combine(self.date, timeslot_time),
-                transport_modes=[r5py.TransportMode.CAR],
-                max_time=self.MAX_TIME,
-            )
+            if self.calculate_distances:
+                detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
+                    transport_network=self.transport_network,
+                    origins=self.origins_destinations,
+                    departure=datetime.datetime.combine(self.date, timeslot_time),
+                    transport_modes=[r5py.TransportMode.CAR],
+                    max_time=self.MAX_TIME,
+                )
+                _travel_times = detailed_itineraries_computer.compute_travel_details()
 
-            _travel_times = detailed_itineraries_computer.compute_travel_details()
+                # Summarise the detailed itineraries:
+                _travel_times = self.summarise_detailed_itineraries(_travel_times)
 
-            # Summarise the detailed itineraries:
-
-            # (1) combine the travel time and distance of individual segments (per travel option)
-            # fmt: off
-            _travel_times = (
-                _travel_times
-                .groupby(["from_id", "to_id", "option"])
-                .sum(["travel_time", "distance"])
-                .reset_index()
-            )
-            # fmt: on
-
-            # (2) find the minimum travel time for each O/D-pair (between the different options),
-            #     keep the row with the minimum travel time -> one record per O/D-pair
-            _travel_times = _travel_times.loc[
-                _travel_times.groupby(["from_id", "to_id"]).distance.idxmin()
-            ]
+            else:
+                travel_time_matrix_computer = r5py.TravelTimeMatrixComputer(
+                    transport_network=self.transport_network,
+                    origins=self.origins_destinations,
+                    departure=datetime.datetime.combine(self.date, timeslot_time),
+                    transport_modes=[r5py.TransportMode.CAR],
+                    max_time=self.MAX_TIME,
+                )
+                _travel_times = travel_time_matrix_computer.compute_travel_times()
 
             # Add times spent walking from the original point to the snapped points,
             # and for finding a parking spot
