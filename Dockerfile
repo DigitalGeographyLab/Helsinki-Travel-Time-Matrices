@@ -1,6 +1,6 @@
 FROM archlinux AS base
 
-ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post13-gc0b53c6-dgl-20230428/r5-v6.9-post13-gc0b53c6-dgl-20230428-all.jar
+ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post14-gdd31949-20230512/r5-v6.9-post14-gdd31949-20230512-all.jar
 
 # copy installation scripts
 COPY scripts/ /tmp/scripts/
