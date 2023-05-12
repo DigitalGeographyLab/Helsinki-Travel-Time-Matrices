@@ -19,6 +19,10 @@ import r5py
 __all__ = ["BaseTravelTimeMatrixComputer"]
 
 
+WORKING_CRS = "EPSG:4326"
+EXTENT_BUFFER = 2000  # 2km around points, in case no extent is specified
+
+
 class BaseTravelTimeMatrixComputer:
     DEFAULT_TIME_OF_DAY = datetime.time(hour=12)
     MAX_TIME = datetime.timedelta(hours=24)
@@ -36,8 +40,22 @@ class BaseTravelTimeMatrixComputer:
         **kwargs,
     ):
         # constraints for other layers
-        self.extent = extent
         self.date = date
+        if extent is None:
+            warnings.warn(
+                "No extent specified, using the extent of `origins_destinations`",
+                RuntimeWarning,
+            )
+            self.extent = (
+                origins_destinations
+                .to_crs(self._good_enough_crs)
+                .buffer(EXTENT_BUFFER)
+                .to_crs(WORKING_CRS)
+                .geometry
+                .unary_union
+            )
+        else:
+            self.extent = extent
 
         self.calculate_distances = calculate_distances
         self.cycling_speeds = cycling_speeds
@@ -107,7 +125,8 @@ class BaseTravelTimeMatrixComputer:
                 area_of_interest=pyproj.aoi.AreaOfInterest(*self.extent.bounds),
             )[0]
             crs = pyproj.CRS.from_authority(crsinfo.auth_name, crsinfo.code)
-        except IndexError:
+        except (AttributeError, IndexError):
+            # either no self.extent defined (yet), or
             # no UTM grid found for the location?! are we on the moon?
             crs = pyproj.CRS.from_epsg(3857)  # well, web mercator will have to do
         return crs
@@ -126,19 +145,8 @@ class BaseTravelTimeMatrixComputer:
 
     @origins_destinations.setter
     def origins_destinations(self, value):
-        WORKING_CRS = "EPSG:4326"
-
         value = value.to_crs(WORKING_CRS)
-
-        # cut to extent (if applicable):
-        if self.extent is None:
-            self.extent = value.geometry.unary_union
-            warnings.warn(
-                "No extent specified, using the extent of `origins_destinations`",
-                RuntimeWarning,
-            )
-        else:
-            value = value[value.geometry.within(self.extent)]
+        value = value[value.geometry.within(self.extent)]
 
         EQUIDISTANT_CRS = self._good_enough_crs
 
@@ -179,8 +187,6 @@ class BaseTravelTimeMatrixComputer:
             / WALKING_SPEED
         ).round(2)
 
-        print(origins_destinations[["walking_time", "snapped_distance"]].describe())
-
         self.access_walking_times = (
             origins_destinations
             [["id", "walking_time"]]
@@ -214,34 +220,33 @@ class BaseTravelTimeMatrixComputer:
             extent_polygon = pathlib.Path(temporary_directory) / "extent.geojson"
             geopandas.GeoDataFrame({"geometry": [self.extent]}).to_file(extent_polygon)
 
-            if not osm_extract_filename.exists():
-                # fmt: off
-                subprocess.run(
-                    [
-                        "/usr/bin/osmium",
-                        "time-filter",
-                        f"{osm_history_file}",
-                        f"{osm_snapshot_datetime}",
-                        "--output", f"{osm_snapshot_filename}",
-                        "--output-format", "osm.pbf",
-                        "--overwrite",
-                        "--no-progress",
-                    ]
-                )
-                subprocess.run(
-                    [
-                        "/usr/bin/osmium",
-                        "extract",
-                        "--strategy", "complete_ways",
-                        "--polygon", f"{extent_polygon}",
-                        f"{osm_snapshot_filename}",
-                        "--output", f"{osm_extract_filename}",
-                        "--output-format", "osm.pbf",
-                        "--overwrite",
-                        "--no-progress",
-                    ]
-                )
-                # fmt: on
+            # fmt: off
+            subprocess.run(
+                [
+                    "/usr/bin/osmium",
+                    "time-filter",
+                    f"{osm_history_file}",
+                    f"{osm_snapshot_datetime}",
+                    "--output", f"{osm_snapshot_filename}",
+                    "--output-format", "osm.pbf",
+                    "--overwrite",
+                    "--no-progress",
+                ]
+            )
+            subprocess.run(
+                [
+                    "/usr/bin/osmium",
+                    "extract",
+                    "--strategy", "complete_ways",
+                    "--polygon", f"{extent_polygon}",
+                    f"{osm_snapshot_filename}",
+                    "--output", f"{osm_extract_filename}",
+                    "--output-format", "osm.pbf",
+                    "--overwrite",
+                    "--no-progress",
+                ]
+            )
+            # fmt: on
 
         self.osm_extract_file = osm_extract_filename
 

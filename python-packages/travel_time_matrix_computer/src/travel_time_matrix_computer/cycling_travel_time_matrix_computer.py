@@ -19,7 +19,7 @@ __all__ = ["CyclingTravelTimeMatrixComputer"]
 class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     # column name -> cycling (base!) speed in km/h
     # these are default values, and are adjusted in __init__()
-    # according to the cycling speeds read from `self.cycling_speeds`
+    # according to the cycling speeds read from `cycling_speeds`
     # (keeping this as a CONSTANT, as it is set/modified during __init__(), only)
     CYCLING_SPEEDS = {
         "bike_fst": 18.09,
@@ -32,9 +32,9 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.cycling_speeds is not None:
-            c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
-            self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
+        if self.cycling_speeds is not None and not self.cycling_speeds.empty:
+            # c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
+            # self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
             self.CYCLING_SPEEDS["bike_avg"] = (
                 self.CYCLING_SPEEDS["bike_slo"] + self.CYCLING_SPEEDS["bike_fst"]
             ) / 2.0

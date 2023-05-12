@@ -134,6 +134,8 @@ def main():
     travel_time_matrix_computer = TravelTimeMatrixComputer(**config)
     travel_times = travel_time_matrix_computer.run()
 
+    print("Now summarising and packaging output")
+
     TravelTimeMatrixOutputSaver(
         travel_times,
         config["origins_destinations"],
