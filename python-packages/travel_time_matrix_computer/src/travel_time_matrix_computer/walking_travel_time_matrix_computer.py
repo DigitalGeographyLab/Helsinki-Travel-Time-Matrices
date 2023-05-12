@@ -18,7 +18,7 @@ __all__ = ["WalkingTravelTimeMatrixComputer"]
 class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     # column name -> walking speed in km/h
     WALKING_SPEEDS = {
-        "walk_avg": 5.15,
+        "walk_avg": 4.7,
         "walk_slo": 3.43,
     }
 
