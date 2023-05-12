@@ -127,7 +127,6 @@ class BaseTravelTimeMatrixComputer:
     @origins_destinations.setter
     def origins_destinations(self, value):
         WORKING_CRS = "EPSG:4326"
-        EQUIDISTANT_CRS = self._good_enough_crs
 
         value = value.to_crs(WORKING_CRS)
 
@@ -140,6 +139,8 @@ class BaseTravelTimeMatrixComputer:
             )
         else:
             value = value[value.geometry.within(self.extent)]
+
+        EQUIDISTANT_CRS = self._good_enough_crs
 
         # remember original for joining output back
         self.__origins_destinations = value.copy()
@@ -158,7 +159,10 @@ class BaseTravelTimeMatrixComputer:
 
         # snap to network, remember walking time (constant speed)
         # from original point to snapped point
-        WALKING_SPEED = 3.6  # km/h
+        WALKING_SPEED = (
+            3.6  # km/h
+            * 1000.0 / 60.0  # -> meters/minute
+        )
 
         # fmt: off
         origins_destinations["snapped_geometry"] = (
@@ -172,8 +176,10 @@ class BaseTravelTimeMatrixComputer:
         )
         origins_destinations["walking_time"] = (  # minutes
             origins_destinations["snapped_distance"]
-            / (WALKING_SPEED * 1000 / 60.0)
+            / WALKING_SPEED
         ).round(2)
+
+        print(origins_destinations[["walking_time", "snapped_distance"]].describe())
 
         self.access_walking_times = (
             origins_destinations
