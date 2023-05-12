@@ -30,11 +30,11 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     # Adding one minute flat to account for unlocking and locking the bicycle
     UNLOCKING_LOCKING_TIME = 1
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cycling_speeds=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.cycling_speeds is not None:
-            c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
-            self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
+        if cycling_speeds is not None:
+            # c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
+            # self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
             self.CYCLING_SPEEDS["bike_avg"] = (
                 self.CYCLING_SPEEDS["bike_slo"] + self.CYCLING_SPEEDS["bike_fst"]
             ) / 2.0
