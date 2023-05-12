@@ -30,9 +30,9 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
     # Adding one minute flat to account for unlocking and locking the bicycle
     UNLOCKING_LOCKING_TIME = 1
 
-    def __init__(self, cycling_speeds=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if cycling_speeds is not None:
+        if self.cycling_speeds is not None and not self.cycling_speeds.empty:
             # c = cycling_speed_annotator.CyclingSpeedAnnotator(self.cycling_speeds)
             # self.CYCLING_SPEEDS["bike_fst"] = c._mean_speed
             self.CYCLING_SPEEDS["bike_avg"] = (
@@ -64,7 +64,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
             )
 
             cycling_speed_annotator.CyclingSpeedAnnotator(
-                self.CYCLING_SPEEDS,
+                self.cycling_speeds,
                 base_speed=cycling_speed,
             ).annotate(
                 original_osm_extract_file,
