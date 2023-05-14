@@ -9,7 +9,7 @@ import datetime
 import functools
 
 import r5py
-import car_speed_annotator
+#  import car_speed_annotator
 import parking_times_calculator
 
 from .base_travel_time_matrix_computer import BaseTravelTimeMatrixComputer
@@ -89,9 +89,12 @@ class CarTravelTimeMatrixComputer(
                     origins=self.origins_destinations,
                     departure=datetime.datetime.combine(self.date, timeslot_time),
                     transport_modes=[r5py.TransportMode.CAR],
+                    percentiles=[1],
                     max_time=self.MAX_TIME,
                 )
                 _travel_times = travel_time_matrix_computer.compute_travel_times()
+
+                _travel_times = _travel_times.rename(columns={"travel_time_p1": "travel_time"})
 
             # Add times spent walking from the original point to the snapped points,
             # and for finding a parking spot
