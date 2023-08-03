@@ -1,24 +1,28 @@
 FROM archlinux AS base
 
-ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post14-gdd31949-20230512/r5-v6.9-post14-gdd31949-20230512-all.jar
+ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post16-g1054c1e-20230619/r5-v6.9-post16-g1054c1e-20230619-all.jar
 
-# copy installation scripts
-COPY scripts/ /tmp/scripts/
+# directory for installation scripts
+RUN mkdir /tmp/scripts
 
 # install base system + dependencies for r5py
+COPY scripts/10-base-system.sh /tmp/scripts/
 RUN /tmp/scripts/10-base-system.sh
 
 # install r5py and test it
 FROM base AS base_r5py
+COPY scripts/20-install-and-test-r5py.sh /tmp/scripts/
 RUN /tmp/scripts/20-install-and-test-r5py.sh
 
 # install the local python packages
 FROM base_r5py AS base_r5py_local_python_packages
+COPY scripts/30-install-local-python-packages.sh /tmp/scripts/
 COPY python-packages/ /tmp/python-packages/
 RUN /tmp/scripts/30-install-local-python-packages.sh
 
 # clean up system image
 FROM base_r5py_local_python_packages AS system
+COPY scripts/99-cleanup.sh /tmp/scripts/
 RUN /tmp/scripts/99-cleanup.sh
 
 

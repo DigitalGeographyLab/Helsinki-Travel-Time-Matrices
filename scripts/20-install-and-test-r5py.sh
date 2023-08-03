@@ -9,8 +9,8 @@
 set +m -euo pipefail
 IFS=$'\n\t '
 
-R5PY_GIT_URL="https://github.com/christophfink/r5py.git@278-keep-geometry"
-#R5PY_GIT_URL="https://github.com/r5py/r5py.git"
+#R5PY_GIT_URL="https://github.com/christophfink/r5py.git@278-keep-geometry"
+R5PY_GIT_URL="https://github.com/r5py/r5py.git"
 
 RUN_TESTS=false
 
@@ -18,7 +18,7 @@ RUN_TESTS=false
 sudo -u dgl /bin/bash <<EOF
     cd
 
-    pip install "git+${R5PY_GIT_URL}"
+    pip install --user --break-system-packages "git+${R5PY_GIT_URL}"
 
     if [[ "${RUN_TESTS}" = true ]]; then
         git clone "${R5PY_GIT_URL}"

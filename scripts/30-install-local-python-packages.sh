@@ -15,7 +15,7 @@ chown -R dgl:dgl /tmp/python-packages/
 sudo -u dgl /bin/bash <<EOF
     ls -1d /tmp/python-packages/* | while read PACKAGE
         do
-            pip install "\${PACKAGE}"
+            pip install --user --break-system-packages "\${PACKAGE}"
         done
 EOF
 
