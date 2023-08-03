@@ -9,7 +9,7 @@ import datetime
 import functools
 
 import r5py
-#  import car_speed_annotator
+import car_speed_annotator
 import parking_times_calculator
 
 from .base_travel_time_matrix_computer import BaseTravelTimeMatrixComputer
@@ -54,27 +54,28 @@ class CarTravelTimeMatrixComputer(
 
     def run(self):
         travel_times = None
-        # original_osm_extract_file = self.osm_extract_file
+        original_osm_extract_file = self.osm_extract_file
 
         for timeslot_name, timeslot_time in self.DEPARTURE_TIMES.items():
             column_suffix = timeslot_name[0]
 
-            # annotated_osm_extract_file = (
-            #     original_osm_extract_file.parent
-            #     / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
-            # )
+            annotated_osm_extract_file = (
+                original_osm_extract_file.parent
+                / f"{self.osm_extract_file.stem}_{timeslot_name}.osm.pbf"
+            )
 
-            # car_speed_annotator.CarSpeedAnnotator(timeslot_name).annotate(
-            #     self.osm_extract_file,
-            #     annotated_osm_extract_file,
-            # )
-            # self.osm_extract_file = annotated_osm_extract_file
+            car_speed_annotator.CarSpeedAnnotator(timeslot_name).annotate(
+                self.osm_extract_file,
+                annotated_osm_extract_file,
+            )
+            self.osm_extract_file = annotated_osm_extract_file
 
             if self.calculate_distances:
                 detailed_itineraries_computer = r5py.DetailedItinerariesComputer(
                     transport_network=self.transport_network,
                     origins=self.origins_destinations,
                     departure=datetime.datetime.combine(self.date, timeslot_time),
+                    departure_time_window=datetime.timedelta(hours=1),
                     transport_modes=[r5py.TransportMode.CAR],
                     max_time=self.MAX_TIME,
                 )
@@ -118,7 +119,7 @@ class CarTravelTimeMatrixComputer(
             else:
                 travel_times = travel_times.join(_travel_times)
 
-            # annotated_osm_extract_file.unlink()
-            # self.osm_extract_file = original_osm_extract_file
+            annotated_osm_extract_file.unlink()
+            self.osm_extract_file = original_osm_extract_file
 
         return travel_times

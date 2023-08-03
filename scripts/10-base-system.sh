@@ -19,6 +19,7 @@ pacman --noconfirm \
     -S \
         --asdeps \
             base-devel \
+	    cmake \
             git \
             pacman-contrib \
             python-pip
@@ -51,7 +52,7 @@ pacman --noconfirm \
             netcdf \
             openexr \
             openjpeg2 \
-            podofo \
+            podofo-0.9 \
             poppler \
             postgresql-libs
 

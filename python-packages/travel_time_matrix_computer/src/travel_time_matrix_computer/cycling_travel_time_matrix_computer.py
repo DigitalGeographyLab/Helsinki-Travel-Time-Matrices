@@ -79,6 +79,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                     departure=datetime.datetime.combine(
                         self.date, self.DEFAULT_TIME_OF_DAY
                     ),
+                    departure_time_window=datetime.timedelta(hours=1),
                     transport_modes=[r5py.TransportMode.BICYCLE],
                     max_time=self.MAX_TIME,
                 )
@@ -94,6 +95,7 @@ class CyclingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                     departure=datetime.datetime.combine(
                         self.date, self.DEFAULT_TIME_OF_DAY
                     ),
+                    departure_time_window=datetime.timedelta(hours=1),
                     transport_modes=[r5py.TransportMode.BICYCLE],
                     percentiles=[1],
                     max_time=self.MAX_TIME,

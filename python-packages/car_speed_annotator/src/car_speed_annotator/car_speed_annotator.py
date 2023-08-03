@@ -29,7 +29,7 @@ WALKING_SPEED = 10
 # https://www.gut.uni-wuppertal.de/fileadmin/bauing/leerkamp/Homepage_alt/Downloads/202003_Tempolimit/20200305-Evaluation_speed_FCD.pdf.
 SPEED_DRIVEN_WHEN_NO_LIMIT = 130
 
-# Assigned only if the `maxspeed` tag cannot be read:
+# Used only if the `maxspeed` tag cannot be read:
 DEFAULT_SPEED_LIMIT = 40
 DEFAULT_TIME_OF_DAY = "average"
 DEFAULT_URBAN_ZONE = YkrVyöhyke.AUTOVYÖHYKE
@@ -182,7 +182,7 @@ class CarSpeedAnnotator(osmium.SimpleHandler):
     @staticmethod
     def _largest_intersection(zones, geometry):
         """
-        Find the zone which geometry intersects most.
+        Find the zone with which `geometry` has the largest intersection.
 
         Arguments
         =========
