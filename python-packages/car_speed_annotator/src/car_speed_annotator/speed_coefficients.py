@@ -15,7 +15,10 @@ __all__ = ["SPEED_COEFFICIENTS"]
 # These data are recreated with the methods presented in Eero Perola’s MSc
 # thesis, in which he used TomTom floating car data to compare speed limit and
 # measured speeds
-# TODO: Add link to helda, once the thesis is published
+#
+# Perola, E. (2023) Driving speed deviation from the speed limits - an analysis
+# using floating car data in the Helsinki Metropolitan Area. MSc thesis,
+# University of Helsinki. http://hdl.handle.net/10138/358181.
 
 # Times of the day, as used below, refer to floating car
 # data averaged over the following time windows:
