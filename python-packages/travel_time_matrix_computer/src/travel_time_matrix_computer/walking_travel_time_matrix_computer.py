@@ -22,6 +22,24 @@ class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
         "walk_slo": 3.43,
     }
 
+    def estimate_walking_distance(self, travel_times):
+        """
+        Add a column that contains a rough estimate of walked distance.
+
+        This adds a column `d_walk` to `travel_times` if it does not exist yet,
+        and uses the `walk_avg` time and speed to derive a distance that r5 does
+        not report natively
+        """
+        if (
+            "d_walk" not in travel_times.columns
+            and "walk_avg" in travel_times.columns
+        ):
+            meters_per_minute = self.WALKING_SPEEDS["walk_avg"] * 1000.0 / 60.0
+            travel_times["d_walk"] = travel_times["walk_avg"].apply(
+                lambda walking_time: round(walking_time * meters_per_minute)
+            )
+        return travel_times
+
     def run(self):
         travel_times = None
         for column_name, walking_speed in self.WALKING_SPEEDS.items():
@@ -78,5 +96,8 @@ class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 travel_times = _travel_times
             else:
                 travel_times = travel_times.join(_travel_times)
+
+        # Add walking distance column
+        travel_times = self.estimate_walking_distance(travel_times)
 
         return travel_times
