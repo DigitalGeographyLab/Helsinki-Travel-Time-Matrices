@@ -7,6 +7,7 @@ data, compile output)"""
 
 import datetime
 import pathlib
+import warnings
 
 import dateparser
 import geopandas
@@ -97,16 +98,12 @@ def read_config(config_file=CONFIG_FILE):
     config["date"] = _parse_date(config["date"])
     config["output_prefix"] = str(config["output_prefix"])
 
-    # optional
-    try:
-        config["calculate_distances"] = bool(config["calculate_distances"])
-    except KeyError:
-        config["calculate_distances"] = False
     try:
         config["cycling_speeds"] = pandas.read_csv(
             _parse_path(config["cycling_speeds"])
         )
     except KeyError:
+        warnings.warn("no cycling speeds")
         config["cycling_speeds"] = pandas.DataFrame({"osm_id": [], "speed": []})
     try:
         config["extent"] = _parse_extent(config["extent"])
