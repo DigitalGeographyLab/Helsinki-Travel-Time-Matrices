@@ -35,6 +35,8 @@ RUN chmod 0755 /usr/share/java/r5/r5-all.jar
 # use a non-root user, make it own the /data directory
 ENV USER=dgl
 RUN mkdir /data && chown "${USER}" /data
+RUN mkdir -p /home/dgl/.config && chown "${USER}" -R /data
+COPY r5py.yml /home/dgl/.config/r5py.yml
 USER "${USER}"
 
 
