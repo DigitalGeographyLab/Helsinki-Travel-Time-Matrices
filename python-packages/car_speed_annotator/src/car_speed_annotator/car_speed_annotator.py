@@ -30,7 +30,7 @@ WALKING_SPEED = 10
 SPEED_DRIVEN_WHEN_NO_LIMIT = 130
 
 # Used only if the `maxspeed` tag cannot be read:
-DEFAULT_SPEED_LIMIT = 40
+DEFAULT_SPEED_LIMIT = 50
 DEFAULT_TIME_OF_DAY = "average"
 DEFAULT_URBAN_ZONE = YkrVyöhyke.AUTOVYÖHYKE
 
