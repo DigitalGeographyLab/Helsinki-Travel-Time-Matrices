@@ -10,12 +10,8 @@ set +m -euo pipefail
 IFS=$'\n\t '
 
 
-# 10. Clean pacman cache, and uninstall unneeded packages
-paccache -rk0
-while (pacman -Qtdq | pacman --noconfirm -Rsndc -)
-    do
-        sleep 0.1
-    done
+# 10. Clean apt cache
+apt-get clean
 
 
 # 11. Clean-up: remove ourselves
