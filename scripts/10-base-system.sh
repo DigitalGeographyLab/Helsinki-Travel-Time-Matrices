@@ -11,89 +11,23 @@ IFS=$'\n\t '
 
 
 # 1. Update system packages
-pacman --noconfirm -Syu
+apt-get update
+apt-get --yes upgrade
 
 
-# 2. Install build-time dependencies (removed further down)
-pacman --noconfirm \
-    -S \
-        --asdeps \
-            base-devel \
-	    cmake \
-            git \
-            pacman-contrib \
-            python-pip
+# 2. Install system-wide dependencies
+apt-get --yes install \
+    build-essential \
+    default-jre \
+    osmium-tool \
+    python3 \
+    python3-gdal \
+    python3-pip \
+    sudo
 
 
-# 3. Install some Python (etc.) packages system-wide (better runtime performance)
-pacman --noconfirm \
-    -S \
-        jdk11-openjdk \
-        python-fiona \
-        python-geopandas \
-        python-joblib \
-        python-pyproj \
-        python-requests \
-        python-shapely \
-        vim
-
-# 3½. Install GDAL’s dependencies, so it does not spam the console
-# (cf. https://bugs.archlinux.org/index.php?do=details&task_id=75749 )
-pacman --noconfirm \
-    -S \
-        --asdeps \
-            arrow \
-            cfitsio \
-            hdf5 \
-            libheif \
-            libjxl \
-            libwebp \
-            mariadb-libs \
-            netcdf \
-            openexr \
-            openjpeg2 \
-            podofo-0.9 \
-            poppler \
-            postgresql-libs
-
-
-# 4. Create a user to compile additional packages, allow it to run `sudo pacman`
-useradd --create-home aurbuilder
-echo "aurbuilder ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/10-aurbuilder
-
-
-# 5. Install dependencies from the AUR
-echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-sudo -u aurbuilder /bin/bash <<EOF
-
-    cd
-
-    for PACKAGE in \
-        include-what-you-use \
-        protozero \
-        libosmium
-    do
-        git clone "https://aur.archlinux.org/\${PACKAGE}.git"
-        cd "\${PACKAGE}"
-        makepkg --noconfirm --syncdeps --rmdeps --install --asdeps
-        cd ..
-    done
-
-    for PACKAGE in \
-        python-jpype1 \
-        osmium-tool
-    do
-        git clone "https://aur.archlinux.org/\${PACKAGE}.git"
-        cd "\${PACKAGE}"
-        makepkg --noconfirm --syncdeps --rmdeps --install
-        cd ..
-    done
-EOF
-
-
-# 6. Remove the build user
-userdel --remove aurbuilder
-rm -v /etc/sudoers.d/10-aurbuilder
+# 3. upgrade pip (breaking things, but fine)
+pip install --upgrade pip
 
 
 # 7. Create an unprivileged user

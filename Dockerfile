@@ -1,6 +1,4 @@
-FROM archlinux AS base
-
-ENV R5_JAR_URL=https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post17-g8207701-20230811/r5-v6.9-post17-g8207701-20230811-all.jar
+FROM ubuntu:22.04 AS base
 
 # directory for installation scripts
 RUN mkdir /tmp/scripts
@@ -26,11 +24,7 @@ COPY scripts/99-cleanup.sh /tmp/scripts/
 RUN /tmp/scripts/99-cleanup.sh
 
 
-FROM system AS r5-and-user
-
-# copy our custom R5 build to the image
-ADD "${R5_JAR_URL}" /usr/share/java/r5/r5-all.jar
-RUN chmod 0755 /usr/share/java/r5/r5-all.jar
+FROM system AS dgl-user
 
 # use a non-root user, make it own the /data directory
 ENV USER=dgl
@@ -40,10 +34,10 @@ COPY r5py.yml /home/dgl/.config/r5py.yml
 USER "${USER}"
 
 
-FROM r5-and-user AS final-stage
+FROM dgl-user AS final-stage
 
 # create a clean single-stage image
-COPY --from=r5-and-user / /
+COPY --from=dgl-user / /
 
 # what to run
 ENTRYPOINT ["/home/dgl/.local/bin/travel-time-matrix"]
