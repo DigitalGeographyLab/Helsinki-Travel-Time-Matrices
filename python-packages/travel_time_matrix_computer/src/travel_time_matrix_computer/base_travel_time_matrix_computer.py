@@ -35,7 +35,6 @@ class BaseTravelTimeMatrixComputer:
         gtfs_data_sets=[],
         cycling_speeds=None,
         extent=None,
-        calculate_distances=False,
         *args,
         **kwargs,
     ):
@@ -47,17 +46,14 @@ class BaseTravelTimeMatrixComputer:
                 RuntimeWarning,
             )
             self.extent = (
-                origins_destinations
-                .to_crs(self._good_enough_crs)
+                origins_destinations.to_crs(self._good_enough_crs)
                 .buffer(EXTENT_BUFFER)
                 .to_crs(WORKING_CRS)
-                .geometry
-                .unary_union
+                .geometry.unary_union
             )
         else:
             self.extent = extent
 
-        self.calculate_distances = calculate_distances
         self.cycling_speeds = cycling_speeds
         self.gtfs_data_sets = gtfs_data_sets
         self.osm_history_file = osm_history_file
@@ -167,10 +163,7 @@ class BaseTravelTimeMatrixComputer:
 
         # snap to network, remember walking time (constant speed)
         # from original point to snapped point
-        WALKING_SPEED = (
-            3.6  # km/h
-            * 1000.0 / 60.0  # -> meters/minute
-        )
+        WALKING_SPEED = 3.6 * 1000.0 / 60.0  # km/h  # -> meters/minute
 
         # fmt: off
         origins_destinations["snapped_geometry"] = (
@@ -249,36 +242,6 @@ class BaseTravelTimeMatrixComputer:
             # fmt: on
 
         self.osm_extract_file = osm_extract_filename
-
-    @staticmethod
-    def summarise_detailed_itineraries(travel_times):
-        # (1) convert travel time into a scalar, pandas seems to unable to
-        # `sum()` `datetime`s
-        travel_times["travel_time"] = travel_times["travel_time"].apply(
-            lambda tt: tt.total_seconds() / 60.0
-        )
-
-        # (2) combine the travel time and distance of individual segments (per travel option)
-        # fmt: off
-        travel_times = (
-            travel_times
-            .groupby(["from_id", "to_id", "option"])[["travel_time", "distance"]]
-            .sum()
-            .reset_index()
-        )
-        # fmt: on
-
-        # (3) find the minimum travel time for each O/D-pair (between the different options),
-        #     keep the row with the minimum travel time -> one record per O/D-pair
-        travel_times = travel_times.loc[
-            travel_times.groupby(["from_id", "to_id"]).distance.idxmin()
-        ]
-
-        # (4) round the columns to two digits, that’s more than enough
-        for column in ("travel_time", "distance"):
-            travel_times[column] = travel_times[column].round(2)
-
-        return travel_times[["from_id", "to_id", "travel_time", "distance"]].copy()
 
     @property
     def transport_network(self):
