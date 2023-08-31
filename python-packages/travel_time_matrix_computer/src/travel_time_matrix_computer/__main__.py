@@ -8,6 +8,7 @@ data, compile output)"""
 import datetime
 import pathlib
 import warnings
+import sys
 
 import dateparser
 import geopandas
@@ -25,6 +26,12 @@ __all__ = []
 PACKAGE = __package__.split(".")[0]
 DATA_DIRECTORY = pathlib.Path("/data")
 CONFIG_FILE = DATA_DIRECTORY / f"{PACKAGE}.yml"
+
+R5_JAR_URL = (
+    "https://github.com/DigitalGeographyLab/r5/releases/download/"
+    "v6.9-post17-g8207701-20230811/r5-v6.9-post17-g8207701-20230811-all.jar"
+)
+sys.argv.append(f"--r5-classpath={R5_JAR_URL}")
 
 
 def _parse_date(date):
