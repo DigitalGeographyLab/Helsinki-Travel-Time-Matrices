@@ -141,8 +141,6 @@ def main():
         output_name_prefix=config["output_prefix"],
     )
 
-    travel_times.to_csv(DATA_DIRECTORY / "travel_times.csv.zst")
-
 
 if __name__ == "__main__":
     main()

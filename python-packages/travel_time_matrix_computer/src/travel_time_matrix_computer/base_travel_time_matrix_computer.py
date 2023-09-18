@@ -78,6 +78,15 @@ class BaseTravelTimeMatrixComputer:
             travel_times = travel_times[COLUMNS]
         return travel_times
 
+    def clean_same_same_o_d_pairs(self, travel_times):
+        """Make sure all routes with identical origin and destination are
+        0-duration."""
+        travel_times.loc[
+            travel_times.from_id == travel_times.to_id,
+            "travel_time"
+        ] = 0
+        return travel_times
+
     @property
     def cycling_speeds(self):
         return self._cycling_speeds
