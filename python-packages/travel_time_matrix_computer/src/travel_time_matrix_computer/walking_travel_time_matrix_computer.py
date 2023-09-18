@@ -60,6 +60,9 @@ class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 columns={"travel_time_p1": "travel_time"}
             )
 
+            # Clean travel times for origin==destination pairs
+            _travel_times = self.clean_same_same_o_d_pairs(_travel_times)
+
             # Add times spent walking from the original point to the snapped points
             _travel_times = self.add_access_times(_travel_times)
 
