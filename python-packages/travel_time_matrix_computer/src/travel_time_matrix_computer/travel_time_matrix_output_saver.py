@@ -5,7 +5,9 @@
 
 
 import pathlib
+import shutil
 import sqlite3
+import subprocess
 import tempfile
 import threading
 import zipfile
@@ -14,6 +16,14 @@ import geopandas
 
 
 class BaseTravelTimeMatrixSaverThread(threading.Thread):
+    SEVEN_ZIP = shutil.which("7za")
+    SEVEN_ZIP_ARGS = [
+        "a",
+        "-mm=Deflate",
+        "-mfb=258",
+        "-mpass=15",
+    ]
+
     def __init__(
         self,
         travel_times,
@@ -69,20 +79,43 @@ class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread)
             except FileNotFoundError:
                 pass
 
-            archive = zipfile.ZipFile(
-                ARCHIVE_NAME,
-                mode="a",
-                compression=zipfile.ZIP_DEFLATED,
-                compresslevel=9,
-            )
-
-            # archive.mkdir(f"{self.output_name_prefix}")  # Python>=3.11
-            for csv_file in output_directory.glob("*.csv"):
-                archive.write(
-                    csv_file,
-                    csv_file.relative_to(temp_directory),
+            if self.SEVEN_ZIP is None:
+                archive = zipfile.ZipFile(
+                    ARCHIVE_NAME,
+                    mode="a",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
                 )
-                csv_file.unlink()
+
+                # archive.mkdir(f"{self.output_name_prefix}")  # Python>=3.11
+                for csv_file in output_directory.glob("*.csv"):
+                    archive.write(
+                        csv_file,
+                        csv_file.relative_to(temp_directory),
+                    )
+                    csv_file.unlink()
+            else:
+                try:
+                    subprocess.run(
+                        [self.SEVEN_ZIP]
+                        + self.SEVEN_ZIP_ARGS
+                        + [
+                            f"{ARCHIVE_NAME}",
+                            f"{output_directory}",
+                        ],
+                        check=True,
+                        cwd=output_directory.parent,
+                    )
+                    for csv_file in output_directory.glob("*.csv"):
+                        csv_file.unlink()
+                except subprocess.CalledProcessError:
+                    print(
+                        f"Failed to compress {ARCHIVE_NAME} "
+                        f"using 7z ({self.SEVEN_ZIP}), "
+                        f"reverting to zipfile"
+                    )
+                    self.SEVEN_ZIP = None
+                    return self.run()
 
 
 class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
@@ -122,15 +155,37 @@ class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThrea
             except FileNotFoundError:
                 pass
 
-            archive = zipfile.ZipFile(
-                ARCHIVE_NAME,
-                mode="a",
-                compression=zipfile.ZIP_DEFLATED,
-                compresslevel=9,
-            )
+            if self.SEVEN_ZIP is None:
+                archive = zipfile.ZipFile(
+                    ARCHIVE_NAME,
+                    mode="a",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
+                )
 
-            archive.write(GPKG_FILE, GPKG_FILE.name)
-            GPKG_FILE.unlink()
+                archive.write(GPKG_FILE, GPKG_FILE.name)
+                GPKG_FILE.unlink()
+            else:
+                try:
+                    subprocess.run(
+                        [self.SEVEN_ZIP]
+                        + self.SEVEN_ZIP_ARGS
+                        + [
+                            f"{ARCHIVE_NAME}",
+                            f"{GPKG_FILE}",
+                        ],
+                        check=True,
+                        cwd=GPKG_FILE.parent,
+                    )
+                    GPKG_FILE.unlink()
+                except subprocess.CalledProcessError:
+                    print(
+                        f"Failed to compress {ARCHIVE_NAME} "
+                        f"using 7z ({self.SEVEN_ZIP}), "
+                        f"reverting to zipfile"
+                    )
+                    self.SEVEN_ZIP = None
+                    return self.run()
 
 
 class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
@@ -149,16 +204,43 @@ class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
             except FileNotFoundError:
                 pass
 
-            archive = zipfile.ZipFile(
-                ARCHIVE_NAME,
-                mode="a",
-                compression=zipfile.ZIP_DEFLATED,
-                compresslevel=9,
-            )
+            if self.SEVEN_ZIP is None:
+                archive = zipfile.ZipFile(
+                    ARCHIVE_NAME,
+                    mode="a",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
+                )
 
-            for shp_part_file in output_directory.glob("*"):
-                archive.write(shp_part_file, shp_part_file.name)
-                shp_part_file.unlink()
+                for shp_part_file in output_directory.glob("*"):
+                    archive.write(shp_part_file, shp_part_file.name)
+                    shp_part_file.unlink()
+
+            else:
+                try:
+                    subprocess.run(
+                        [self.SEVEN_ZIP]
+                        + self.SEVEN_ZIP_ARGS
+                        + [
+                            f"{ARCHIVE_NAME}",
+                            [
+                                f"{shp_part_file.name}"
+                                for shp_part_file in output_directory.glob("*")
+                            ],
+                        ],
+                        check=True,
+                        cwd=output_directory,
+                    )
+                    for shp_part_file in output_directory.glob("*"):
+                        shp_part_file.unlink()
+                except subprocess.CalledProcessError:
+                    print(
+                        f"Failed to compress {ARCHIVE_NAME} "
+                        f"using 7z ({self.SEVEN_ZIP}), "
+                        f"reverting to zipfile"
+                    )
+                    self.SEVEN_ZIP = None
+                    return self.run()
 
 
 class GpkgOfGridOnly(BaseTravelTimeMatrixSaverThread):
@@ -176,15 +258,37 @@ class GpkgOfGridOnly(BaseTravelTimeMatrixSaverThread):
             except FileNotFoundError:
                 pass
 
-            archive = zipfile.ZipFile(
-                ARCHIVE_NAME,
-                mode="a",
-                compression=zipfile.ZIP_DEFLATED,
-                compresslevel=9,
-            )
+            if self.SEVEN_ZIP is None:
+                archive = zipfile.ZipFile(
+                    ARCHIVE_NAME,
+                    mode="a",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
+                )
 
-            archive.write(GPKG_FILE, GPKG_FILE.name)
-            GPKG_FILE.unlink()
+                archive.write(GPKG_FILE, GPKG_FILE.name)
+                GPKG_FILE.unlink()
+            else:
+                try:
+                    subprocess.run(
+                        [self.SEVEN_ZIP]
+                        + self.SEVEN_ZIP_ARGS
+                        + [
+                            f"{ARCHIVE_NAME}",
+                            f"{GPKG_FILE}",
+                        ],
+                        check=True,
+                        cwd=GPKG_FILE.parent,
+                    )
+                    GPKG_FILE.unlink()
+                except subprocess.CalledProcessError:
+                    print(
+                        f"Failed to compress {ARCHIVE_NAME} "
+                        f"using 7z ({self.SEVEN_ZIP}), "
+                        f"reverting to zipfile"
+                    )
+                    self.SEVEN_ZIP = None
+                    return self.run()
 
 
 class GiantParquetTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread):
