@@ -22,7 +22,7 @@ __all__ = ["BaseTravelTimeMatrixComputer"]
 
 WORKING_CRS = "EPSG:4326"
 EXTENT_BUFFER = 2000  # 2km around points, in case no extent is specified
-MAX_SNAP_DISTANCE_METRES = math.ceil(250.0 * math.sqrt(2))  # grid cell diagonal
+MAX_SNAP_DISTANCE_METRES = math.ceil(250.0 * math.sqrt(2) / 2)  # half of grid cell diagonal
 
 
 class BaseTravelTimeMatrixComputer:
