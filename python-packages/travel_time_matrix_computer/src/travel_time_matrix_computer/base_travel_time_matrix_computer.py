@@ -175,8 +175,10 @@ class BaseTravelTimeMatrixComputer:
 
         # fmt: off
         origins_destinations["snapped_geometry"] = (
-            self.transport_network.snap_to_network(origins_destinations["geometry"],
-            radius=MAX_SNAP_DISTANCE_METRES,)
+            self.transport_network.snap_to_network(
+                origins_destinations["geometry"],
+                radius=MAX_SNAP_DISTANCE_METRES,
+            )
         )
         origins_destinations["snapped_distance"] = (  # meters
             origins_destinations.geometry.to_crs(EQUIDISTANT_CRS)
