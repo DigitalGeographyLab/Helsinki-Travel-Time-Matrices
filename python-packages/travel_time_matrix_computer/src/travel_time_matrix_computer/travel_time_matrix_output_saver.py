@@ -4,6 +4,7 @@
 """Save the results of a travel time matrix computation in many file formats."""
 
 
+import os
 import pathlib
 import shutil
 import sqlite3
@@ -96,16 +97,19 @@ class CsvSplitByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThread)
                     csv_file.unlink()
             else:
                 try:
-                    subprocess.run(
-                        [self.SEVEN_ZIP]
-                        + self.SEVEN_ZIP_ARGS
-                        + [
-                            f"{ARCHIVE_NAME}",
-                            f"{output_directory}",
-                        ],
-                        check=True,
-                        cwd=output_directory.parent,
-                    )
+                    with open(os.devnull, "w") as devnull:
+                        subprocess.run(
+                            [self.SEVEN_ZIP]
+                            + self.SEVEN_ZIP_ARGS
+                            + [
+                                f"{ARCHIVE_NAME}",
+                                f"{output_directory}",
+                            ],
+                            check=True,
+                            cwd=output_directory.parent,
+                            stdout=devnull,
+                            stderr=devnull,
+                        )
                     for csv_file in output_directory.glob("*.csv"):
                         csv_file.unlink()
                 except subprocess.CalledProcessError:
@@ -167,16 +171,19 @@ class GpkgJoinedByToIdTravelTimeMatrixSaverThread(BaseTravelTimeMatrixSaverThrea
                 GPKG_FILE.unlink()
             else:
                 try:
-                    subprocess.run(
-                        [self.SEVEN_ZIP]
-                        + self.SEVEN_ZIP_ARGS
-                        + [
-                            f"{ARCHIVE_NAME}",
-                            f"{GPKG_FILE}",
-                        ],
-                        check=True,
-                        cwd=GPKG_FILE.parent,
-                    )
+                    with open(os.devnull, "w") as devnull:
+                        subprocess.run(
+                            [self.SEVEN_ZIP]
+                            + self.SEVEN_ZIP_ARGS
+                            + [
+                                f"{ARCHIVE_NAME}",
+                                f"{GPKG_FILE}",
+                            ],
+                            check=True,
+                            cwd=GPKG_FILE.parent,
+                            stdout=devnull,
+                            stderr=devnull,
+                        )
                     GPKG_FILE.unlink()
                 except subprocess.CalledProcessError:
                     print(
@@ -218,19 +225,20 @@ class ShapefileOfGridOnly(BaseTravelTimeMatrixSaverThread):
 
             else:
                 try:
-                    subprocess.run(
-                        [self.SEVEN_ZIP]
-                        + self.SEVEN_ZIP_ARGS
-                        + [
-                            f"{ARCHIVE_NAME}",
-                            [
+                    with open(os.devnull, "w") as devnull:
+                        subprocess.run(
+                            [self.SEVEN_ZIP]
+                            + self.SEVEN_ZIP_ARGS
+                            + [f"{ARCHIVE_NAME}"]
+                            + [
                                 f"{shp_part_file.name}"
                                 for shp_part_file in output_directory.glob("*")
                             ],
-                        ],
-                        check=True,
-                        cwd=output_directory,
-                    )
+                            check=True,
+                            cwd=output_directory,
+                            stdout=devnull,
+                            stderr=devnull,
+                        )
                     for shp_part_file in output_directory.glob("*"):
                         shp_part_file.unlink()
                 except subprocess.CalledProcessError:
@@ -270,16 +278,19 @@ class GpkgOfGridOnly(BaseTravelTimeMatrixSaverThread):
                 GPKG_FILE.unlink()
             else:
                 try:
-                    subprocess.run(
-                        [self.SEVEN_ZIP]
-                        + self.SEVEN_ZIP_ARGS
-                        + [
-                            f"{ARCHIVE_NAME}",
-                            f"{GPKG_FILE}",
-                        ],
-                        check=True,
-                        cwd=GPKG_FILE.parent,
-                    )
+                    with open(os.devnull, "w") as devnull:
+                        subprocess.run(
+                            [self.SEVEN_ZIP]
+                            + self.SEVEN_ZIP_ARGS
+                            + [
+                                f"{ARCHIVE_NAME}",
+                                f"{GPKG_FILE}",
+                            ],
+                            check=True,
+                            cwd=GPKG_FILE.parent,
+                            stdout=devnull,
+                            stderr=devnull,
+                        )
                     GPKG_FILE.unlink()
                 except subprocess.CalledProcessError:
                     print(
