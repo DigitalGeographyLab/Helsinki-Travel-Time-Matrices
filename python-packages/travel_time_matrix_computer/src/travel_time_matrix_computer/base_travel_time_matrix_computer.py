@@ -192,7 +192,7 @@ class BaseTravelTimeMatrixComputer:
         origins_destinations["walking_time"] = (  # minutes
             origins_destinations["snapped_distance"]
             / WALKING_SPEED
-        ).apply(numpy.ceil).astype(int)
+        ).fillna(0).apply(numpy.ceil).astype(int)
 
         self.access_walking_times = (
             origins_destinations

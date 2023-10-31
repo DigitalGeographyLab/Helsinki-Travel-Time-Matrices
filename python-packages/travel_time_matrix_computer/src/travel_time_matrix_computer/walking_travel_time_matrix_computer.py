@@ -36,6 +36,8 @@ class WalkingTravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
                 travel_times["walk_avg"]
                 .apply(lambda walking_time: walking_time * meters_per_minute)
                 .round()
+                .fillna(-1)
+                .astype(int)
             )
         return travel_times
 
