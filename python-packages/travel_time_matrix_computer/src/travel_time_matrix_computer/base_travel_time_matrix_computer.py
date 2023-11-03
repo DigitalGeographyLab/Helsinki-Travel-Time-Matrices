@@ -6,6 +6,8 @@ data, compile output)"""
 
 
 import datetime
+import math
+import numpy
 import pathlib
 import subprocess
 import tempfile
@@ -21,6 +23,9 @@ __all__ = ["BaseTravelTimeMatrixComputer"]
 
 WORKING_CRS = "EPSG:4326"
 EXTENT_BUFFER = 2000  # 2km around points, in case no extent is specified
+MAX_SNAP_DISTANCE_METRES = math.ceil(
+    250.0 * math.sqrt(2) / 2
+)  # half of grid cell diagonal
 
 
 class BaseTravelTimeMatrixComputer:
@@ -73,7 +78,7 @@ class BaseTravelTimeMatrixComputer:
             travel_times.loc[
                 travel_times.from_id != travel_times.to_id,
                 "travel_time"
-            ] += travel_times["walking_time"]
+            ] += round(travel_times["walking_time"])
             # fmt: on
             travel_times = travel_times[COLUMNS]
         return travel_times
@@ -81,10 +86,7 @@ class BaseTravelTimeMatrixComputer:
     def clean_same_same_o_d_pairs(self, travel_times):
         """Make sure all routes with identical origin and destination are
         0-duration."""
-        travel_times.loc[
-            travel_times.from_id == travel_times.to_id,
-            "travel_time"
-        ] = 0
+        travel_times.loc[travel_times.from_id == travel_times.to_id, "travel_time"] = 0
         return travel_times
 
     @property
@@ -176,7 +178,10 @@ class BaseTravelTimeMatrixComputer:
 
         # fmt: off
         origins_destinations["snapped_geometry"] = (
-            self.transport_network.snap_to_network(origins_destinations["geometry"])
+            self.transport_network.snap_to_network(
+                origins_destinations["geometry"],
+                radius=MAX_SNAP_DISTANCE_METRES,
+            )
         )
         origins_destinations["snapped_distance"] = (  # meters
             origins_destinations.geometry.to_crs(EQUIDISTANT_CRS)
@@ -187,13 +192,14 @@ class BaseTravelTimeMatrixComputer:
         origins_destinations["walking_time"] = (  # minutes
             origins_destinations["snapped_distance"]
             / WALKING_SPEED
-        ).round(2)
+        ).fillna(0).apply(numpy.ceil).astype(int)
 
         self.access_walking_times = (
             origins_destinations
             [["id", "walking_time"]]
             .copy()
             .set_index("id")
+
         )
         self._origins_destinations = (
             origins_destinations

@@ -20,6 +20,7 @@ apt-get --yes install \
     build-essential \
     default-jre \
     osmium-tool \
+    p7zip-full \
     python3 \
     python3-gdal \
     python3-pip \
