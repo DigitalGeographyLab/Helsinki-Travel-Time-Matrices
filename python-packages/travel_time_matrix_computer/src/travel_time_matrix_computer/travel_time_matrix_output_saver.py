@@ -22,7 +22,7 @@ class BaseTravelTimeMatrixSaverThread(threading.Thread):
         "a",
         "-mm=Deflate",
         "-mfb=258",
-        "-mpass=15",
+        "-mpass=3",
     ]
 
     def __init__(
