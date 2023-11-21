@@ -1,0 +1,3 @@
+[submodule "python-packages/parking-times-calculator"]
+	path = python-packages/parking-times-calculator
+	url = git@github.com:DigitalGeographyLab/parking-times-calculator.git
