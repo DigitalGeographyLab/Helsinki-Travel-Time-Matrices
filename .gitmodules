@@ -4,3 +4,6 @@
 [submodule "python-packages/car-speed-annotator"]
 	path = python-packages/car-speed-annotator
 	url = git@github.com:DigitalGeographyLab/car-speed-annotator.git
+[submodule "python-packages/cycling-speed-annotator"]
+	path = python-packages/cycling-speed-annotator
+	url = git@github.com:DigitalGeographyLab/cycling-speed-annotator.git
