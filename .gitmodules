@@ -1,3 +1,6 @@
 [submodule "python-packages/parking-times-calculator"]
 	path = python-packages/parking-times-calculator
 	url = git@github.com:DigitalGeographyLab/parking-times-calculator.git
+[submodule "python-packages/car-speed-annotator"]
+	path = python-packages/car-speed-annotator
+	url = git@github.com:DigitalGeographyLab/car-speed-annotator.git
