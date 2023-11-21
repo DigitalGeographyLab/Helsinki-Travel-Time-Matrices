@@ -7,3 +7,6 @@
 [submodule "python-packages/cycling-speed-annotator"]
 	path = python-packages/cycling-speed-annotator
 	url = git@github.com:DigitalGeographyLab/cycling-speed-annotator.git
+[submodule "python-packages/travel-time-matrix-computer"]
+	path = python-packages/travel-time-matrix-computer
+	url = git@github.com:DigitalGeographyLab/travel-time-matrix-computer.git
