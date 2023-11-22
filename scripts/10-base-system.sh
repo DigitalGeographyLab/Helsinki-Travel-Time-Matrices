@@ -19,6 +19,7 @@ apt-get --yes upgrade
 apt-get --yes install \
     build-essential \
     default-jre \
+    git \
     osmium-tool \
     p7zip-full \
     python3 \
