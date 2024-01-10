@@ -1,0 +1,13 @@
+version: '2024.01.09'
+
+services:
+  ttm-computation:
+    build: 
+      context: .
+      network: host
+    volumes: 
+      - ./data:/data
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 524288

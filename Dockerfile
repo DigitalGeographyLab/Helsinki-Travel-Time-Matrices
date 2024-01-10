@@ -15,7 +15,6 @@ RUN /tmp/scripts/20-install-and-test-r5py.sh
 # install the local python packages
 FROM base_r5py AS base_r5py_local_python_packages
 COPY scripts/30-install-local-python-packages.sh /tmp/scripts/
-COPY python-packages/ /tmp/python-packages/
 RUN /tmp/scripts/30-install-local-python-packages.sh
 
 # clean up system image
