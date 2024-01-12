@@ -9,6 +9,7 @@
 !.keep
 
 data/*
+!data/travel_time_matrix_computer.yml
 
 /python-packages/*/build/
 /python-packages/*/dist/

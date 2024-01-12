@@ -1,0 +1,8 @@
+date: 2023-02-15
+osm_history_file: finland-internal.osh.pbf
+origins_destinations: YKR_250m_PKS.gpkg
+gtfs_data_sets: 
+    - HSL_20230215-20230228_gtfs.zip
+cycling_speeds: all_edges_monthly_sep_2022_ride_speeds.csv
+output_prefix: Helsinki_Travel_Time_Matrix_2023
+extent: "Polygon ((24.92708231587133838 60.16390208102721004, 24.9415134386280215 60.1641270968835471, 24.94104233906297452 60.1716549229723725, 24.9266079193871235 60.17142983894190422, 24.92708231587133838 60.16390208102721004))"
