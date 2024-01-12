@@ -27,7 +27,7 @@ adjustments to these instructions.
       appropriate firewall rules to be able to connect to the instance using SSH
       (port 22)
 
-![Screenshot of the OpenStack config used to create the new CSC Pouta instance](extras/images/pouta-create-instance_746x882px.png)
+![Screenshot of the OpenStack config used to create the new CSC Pouta instance](extra/images/pouta-create-instance_746x882px.png)
 
 2. Assign a floating IP address to the instance
 
