@@ -56,7 +56,9 @@ adjustments to these instructions.
    sudo chmod 0600 /.swapfile
    # then format it appropriately
    sudo mkswap /.swapfile
-   # and add the following line to the end of the config file `/etc/fstab`
+   ```
+
+   Then, add the following line to the end of the config file `/etc/fstab`
    (e.g., using `vi`):
    ```
    /.swapfile    swap    swap    sw 0 0
