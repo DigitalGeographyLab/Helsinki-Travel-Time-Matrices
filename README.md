@@ -16,7 +16,7 @@ to input data sets that can be found on the groups network share (the
 adjustments to these instructions.
 
 
-### Install a docker host
+### 1. Install a docker engine (here: on a CSC Pouta instance)
 
 1. Create a new CSC Pouta instance, and use the following settings:
     - Flavour: `hpc.5.64core`
@@ -98,7 +98,7 @@ units rapidly.
 
 
 
-## Clone this repository
+### 2. Clone this repository
 
 On the CSC Pouta instance, check out this repository:
 
@@ -114,8 +114,9 @@ cd Helsinki-Travel-Time-Matrices
 git pull
 ```
 
+## Run the computation
 
-## Add input data sets and edit configuration file
+### 1. Add input data sets and edit configuration file
 
 Use `rsync` or any `scp` implementation (on Windows, e.g., WinSCP) to upload the
 following input files to the `~/Helsinki-Travel-Time-Matrices/data/` directory:
@@ -142,7 +143,7 @@ files are named). Optionally, define the `extent` by copy-and-pasting a
 
 
 
-## Run the computation
+### 2. Start the computation
 
 Connect to the Pouta instance, optionally (but strongly recommended), start a
 [tmux
@@ -156,7 +157,7 @@ cd Helsinki-Travel-Time-Matrices
 docker compose up
 ```
 
-### Troubleshooting
+#### Troubleshooting
 
 If there have been updates to the git repo since the last run, docker might not
 always rebuild its container image. Remove it to force a rebuild before running
@@ -167,7 +168,7 @@ docker system prune
 ```
 
 
-## Retrieve the output data
+### 3. Retrieve the output data
 
 After computation has finished, use SCP to get the output data sets. They are
 saved to `Helsinki-Travel-Time-Matrices/data/output/`.
