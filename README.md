@@ -122,7 +122,7 @@ units rapidly.
 
 ### 2. Clone this repository
 
-On the CSC Pouta instance, check out this repository:
+On the CSC Pouta instance, clone this repository:
 
 ```
 git clone https://github.com/DigitalGeographyLab/Helsinki-Travel-Time-Matrices.git
@@ -140,8 +140,9 @@ git pull
 
 ### 1. Add input data sets and edit configuration file
 
-Use `rsync` or any `scp` implementation (on Windows, e.g., WinSCP) to upload the
-following input files to the `~/Helsinki-Travel-Time-Matrices/data/` directory:
+Use `rsync` or any `scp` implementation (on Windows, e.g., WinSCP or FileZilla)
+to upload the following input files to the
+`~/Helsinki-Travel-Time-Matrices/data/` directory:
 
 - a full history dump of OpenStreetMap covering the study area (usually,
   `finland-internal.osh.pbf` from
@@ -194,3 +195,9 @@ docker system prune
 
 After computation has finished, use SCP to get the output data sets. They are
 saved to `Helsinki-Travel-Time-Matrices/data/output/`.
+
+**Remember:** To save some setup work on future computation, you can keep the volume in Pouta
+and then use ‘launch as an instance’ whenever you need it. That said, be sure to
+always destroy/delete the instance itself once you’re done with computation and
+have downloaded the resulting data sets, as the instance is consuming billing
+units rapidly.
