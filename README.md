@@ -5,6 +5,28 @@ time matrices for the Helsinki metropolitan area, in a self-contained Docker
 container.
 
 
+## Dependencies
+
+The docker container that can be built and run using the specification in this
+repository depends on the following python packages:
+
+- https://github.com/DigitalGeographyLab/travel-time-matrix-computer
+- https://github.com/DigitalGeographyLab/cycling-speed-annotator
+- https://github.com/DigitalGeographyLab/car-speed-annotator
+- https://github.com/DigitalGeographyLab/parking-times-calculator
+
+... which in turn depend on [r5py](https://r5py.readthedocs.io/),
+[R5](https://github.com/conveyal/r5), and a Java Runtime Environment.
+
+
+## Architecture
+
+The components and dependencies relate to each other in the following way
+(‘Docker container’ refers to the tool in this repository):
+
+![A logic diagram of the architecture of this tool](extra/images/helsinki-ttm-architecture_1050x550px.png)
+
+
 ## Installation
 
 These installation instructions are tailored to the use case and the
