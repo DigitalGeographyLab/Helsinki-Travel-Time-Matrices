@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1050"
+   height="550"
+   viewBox="0 0 277.81251 145.52084"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   sodipodi:docname="ttm-architecture.svg"
+   inkscape:export-filename="helsinki-ttm-architecture_1050x550px.png.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="1.0790449"
+     inkscape:cx="392.94007"
+     inkscape:cy="326.67777"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="marker50"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path50" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect2" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect8" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect16" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.47214"
+       height="144.98544"
+       id="rect18" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect33" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect35" />
+    <rect
+       x="174.39072"
+       y="122.67591"
+       width="219.34729"
+       height="136.28598"
+       id="rect39" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(40.895423,-4.7625032)">
+    <g
+       id="g43"
+       transform="translate(13.505623,7.6827329)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect1"
+         width="58.035645"
+         height="36.058998"
+         x="13.498437"
+         y="4.7955761" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,-32.642436,-27.662425)"
+         id="text1"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan10"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan5">Docker container</tspan><tspan
+             style="text-align:start"
+             id="tspan7">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan12"><tspan
+             style="text-align:start"
+             id="tspan11">creates virtual machine image with all </tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan15"><tspan
+             style="text-align:start"
+             id="tspan14">dependencies and then runs matrix </tspan></tspan><tspan
+           x="183.01953"
+           y="178.9672"
+           id="tspan19"><tspan
+             style="text-align:start"
+             id="tspan18">computation
+</tspan></tspan><tspan
+           x="183.01953"
+           y="191.5672"
+           id="tspan21"><tspan
+             style="text-align:start"
+             id="tspan20">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="204.16721"
+           id="tspan25"><tspan
+             style="font-style:italic;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Italic'"
+             id="tspan23">Dockerfile</tspan><tspan
+             style="text-align:start"
+             id="tspan24">: defines image content
+</tspan></tspan><tspan
+           x="183.01953"
+           y="216.76722"
+           id="tspan28"><tspan
+             style="font-style:italic;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Italic'"
+             id="tspan26">docker-compose.yml</tspan><tspan
+             style="text-align:start"
+             id="tspan27">: links to </tspan></tspan><tspan
+           x="183.01953"
+           y="229.36722"
+           id="tspan38"><tspan
+             style="text-align:start"
+             id="tspan29">Dockerfile, defines runtime </tspan></tspan><tspan
+           x="183.01953"
+           y="241.96723"
+           id="tspan41"><tspan
+             style="text-align:start"
+             id="tspan40">environment (e.g. mounted volumes)</tspan></tspan></text>
+    </g>
+    <g
+       id="g42"
+       transform="translate(13.505623,13.207207)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect5"
+         width="58.035645"
+         height="36.058998"
+         x="13.498437"
+         y="46.286217" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,-32.642438,13.82822)"
+         id="text8"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect8);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan44"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan42">travel-time-matrix-computer</tspan><tspan
+             style="text-align:start"
+             id="tspan43">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan46"><tspan
+             style="text-align:start"
+             id="tspan45">wrapper around r5py to run </tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan48"><tspan
+             style="text-align:start"
+             id="tspan47">multimodal TTM computation and </tspan></tspan><tspan
+           x="183.01953"
+           y="178.9672"
+           id="tspan50"><tspan
+             style="text-align:start"
+             id="tspan49">pack output files in DGL tradition
+</tspan></tspan><tspan
+           x="183.01953"
+           y="191.5672"
+           id="tspan52"><tspan
+             style="text-align:start"
+             id="tspan51">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="204.16721"
+           id="tspan64"><tspan
+             style="font-style:italic;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Italic'"
+             id="tspan53">travel_time_matrix_computer.yml</tspan><tspan
+             style="text-align:start"
+             id="tspan61">:  </tspan></tspan><tspan
+           x="183.01953"
+           y="216.76722"
+           id="tspan66"><tspan
+             style="text-align:start"
+             id="tspan65">defines input files, date for TTM, </tspan></tspan><tspan
+           x="183.01953"
+           y="229.36722"
+           id="tspan68"><tspan
+             style="text-align:start"
+             id="tspan67">output file name template</tspan></tspan></text>
+    </g>
+    <g
+       id="g41"
+       transform="translate(5.0357371,8.2848371)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect13"
+         width="58.035645"
+         height="36.058998"
+         x="-40.86235"
+         y="98.223701" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,-87.003179,65.765697)"
+         id="text16"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect16);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan71"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan69">car-speed-annotator</tspan><tspan
+             style="text-align:start"
+             id="tspan70">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan73"><tspan
+             style="text-align:start"
+             id="tspan72">helper Python package, bakes </tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan75"><tspan
+             style="text-align:start"
+             id="tspan74">actually driven speeds (Perola, 2023) </tspan></tspan><tspan
+           x="183.01953"
+           y="178.9672"
+           id="tspan77"><tspan
+             style="text-align:start"
+             id="tspan76">into OSM extracts according to </tspan></tspan><tspan
+           x="183.01953"
+           y="191.5672"
+           id="tspan79"><tspan
+             style="text-align:start"
+             id="tspan78">speed limit and YKR urban class
+</tspan></tspan><tspan
+           x="183.01953"
+           y="204.16721"
+           id="tspan81"><tspan
+             style="text-align:start"
+             id="tspan80">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="216.76722"
+           id="tspan83"><tspan
+             style="text-align:start"
+             id="tspan82">(raw values are ‘hard-coded’ into the </tspan></tspan><tspan
+           x="183.01953"
+           y="229.36722"
+           id="tspan85"><tspan
+             style="text-align:start"
+             id="tspan84">package)</tspan></tspan></text>
+    </g>
+    <g
+       id="g40"
+       transform="translate(5.0357371,8.2848371)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect17"
+         width="58.035645"
+         height="36.058998"
+         x="21.968323"
+         y="98.223701" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,-24.172504,65.765704)"
+         id="text18"
+         style="font-size:12px;line-height:0;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect18);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-270.862"
+         y="0"><tspan
+           x="183.01953"
+           y="140.99942"
+           id="tspan88"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold';text-align:start"
+             id="tspan86">cycling-speed-annotator</tspan><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan87">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.59943"
+           id="tspan90"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan89">helper Python package, bakes </tspan></tspan><tspan
+           x="183.01953"
+           y="166.19944"
+           id="tspan92"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan91">cycling speeds into OSM extracts 
+</tspan></tspan><tspan
+           x="183.01953"
+           y="178.79944"
+           id="tspan94"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan93"> 
+</tspan></tspan><tspan
+           x="183.01953"
+           y="191.39945"
+           id="tspan97"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan95">needs input CSV file (see its</tspan><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan96"> </tspan></tspan><tspan
+           x="183.01953"
+           y="203.99945"
+           id="tspan99"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan98">repository, not open data, on P:)
+</tspan></tspan><tspan
+           x="183.01953"
+           y="216.59946"
+           id="tspan101"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan100">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="229.19947"
+           id="tspan103"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan102">uses relative differences from Strava </tspan></tspan><tspan
+           x="183.01953"
+           y="241.79947"
+           id="tspan105"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan104">metro data to set variation around </tspan></tspan><tspan
+           x="183.01953"
+           y="254.39948"
+           id="tspan107"><tspan
+             style="line-height:1.05;text-align:start"
+             id="tspan106">optional non-Strava average
+</tspan></tspan></text>
+    </g>
+    <g
+       id="g39"
+       transform="translate(5.0357371,7.6827329)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect32"
+         width="58.035645"
+         height="36.058998"
+         x="84.798996"
+         y="98.825806" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,38.658162,66.367811)"
+         id="text33"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect33);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan110"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan108">parking-time-calculator</tspan><tspan
+             style="text-align:start"
+             id="tspan109">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan112"><tspan
+             style="text-align:start"
+             id="tspan111">helper Python package, finds </tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan114"><tspan
+             style="text-align:start"
+             id="tspan113">expected parking time for any point </tspan></tspan><tspan
+           x="183.01953"
+           y="178.9672"
+           id="tspan116"><tspan
+             style="text-align:start"
+             id="tspan115">in the HMA, depending on YKR urban </tspan></tspan><tspan
+           x="183.01953"
+           y="191.5672"
+           id="tspan118"><tspan
+             style="text-align:start"
+             id="tspan117">class and municipality 
+</tspan></tspan><tspan
+           x="183.01953"
+           y="204.16721"
+           id="tspan120"><tspan
+             style="text-align:start"
+             id="tspan119">(Vesanen, 2020)
+</tspan></tspan><tspan
+           x="183.01953"
+           y="216.76722"
+           id="tspan122"><tspan
+             style="text-align:start"
+             id="tspan121">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="229.36722"
+           id="tspan124"><tspan
+             style="text-align:start"
+             id="tspan123">(raw values are ‘hard-coded’ into the </tspan></tspan><tspan
+           x="183.01953"
+           y="241.96723"
+           id="tspan126"><tspan
+             style="text-align:start"
+             id="tspan125">package)</tspan></tspan></text>
+    </g>
+    <g
+       id="g44"
+       transform="translate(-115.41083,41.397779)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect34"
+         width="58.035645"
+         height="36.058998"
+         x="215.81918"
+         y="0.0330729" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,169.67835,-32.424925)"
+         id="text35"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect35);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan129"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan127">r5py</tspan><tspan
+             style="text-align:start"
+             id="tspan128">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan131"><tspan
+             style="text-align:start"
+             id="tspan130">Python package/library to compute
+</tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan133"><tspan
+             style="text-align:start"
+             id="tspan132">different types of TTMs
+</tspan></tspan><tspan
+           x="183.01953"
+           y="178.9672"
+           id="tspan135"><tspan
+             style="text-align:start"
+             id="tspan134">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="191.5672"
+           id="tspan138"><tspan
+             style="font-style:italic;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Italic'"
+             id="tspan136">r5py.yml</tspan><tspan
+             style="text-align:start"
+             id="tspan137">: R5 version, memory </tspan></tspan><tspan
+           x="183.01953"
+           y="204.16721"
+           id="tspan140"><tspan
+             style="text-align:start"
+             id="tspan139">consumption, verbose output</tspan></tspan></text>
+    </g>
+    <g
+       id="g45"
+       transform="translate(-121.03035,27.035423)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         id="rect37"
+         width="58.035645"
+         height="36.058998"
+         x="294.84299"
+         y="14.395429" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,248.70216,-18.06257)"
+         id="text39"
+         style="font-size:12px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Normal';text-align:end;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect39);shape-padding:8.62851;display:inline;fill:#000000;stroke:none;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         x="-68.772163"
+         y="0"><tspan
+           x="183.01953"
+           y="141.16719"
+           id="tspan143"><tspan
+             style="font-weight:bold;-inkscape-font-specification:'HelveticaNeue LT 55 Roman,  Bold'"
+             id="tspan141">R5</tspan><tspan
+             style="text-align:start"
+             id="tspan142">
+</tspan></tspan><tspan
+           x="183.01953"
+           y="153.76719"
+           id="tspan145"><tspan
+             style="text-align:start"
+             id="tspan144">Java library (created by Conveyal), 
+</tspan></tspan><tspan
+           x="183.01953"
+           y="166.36719"
+           id="tspan147"><tspan
+             style="text-align:start"
+             id="tspan146">routing engine</tspan></tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 56.02188,48.537309 v 10.956113"
+       id="path48" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 56.02188,95.552422 2e-6,10.956118"
+       id="path52" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 56.02188,95.552422 -62.8306715,10.956118"
+       id="path49" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 56.02188,95.552422 62.83067,10.956118"
+       id="path51" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 85.039701,77.522922 15.368649,-18.06257"
+       id="path53" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 158.44399,59.460352 15.36864,-3e-6"
+       id="path54" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="56.729351"
+       y="53.243134"
+       id="text54"><tspan
+         sodipodi:role="line"
+         id="tspan54"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="56.729351"
+         y="53.243134">runs, </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="56.729351"
+         y="55.465637"
+         id="tspan60">manages configuration</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="92.988663"
+       y="70.686852"
+       id="text55"><tspan
+         sodipodi:role="line"
+         id="tspan55"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="92.988663"
+         y="70.686852">runs</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="163.61484"
+       y="58.290436"
+       id="text56"><tspan
+         sodipodi:role="line"
+         id="tspan56"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="163.61484"
+         y="58.290436">uses</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="91.806267"
+       y="100.92818"
+       id="text57"><tspan
+         sodipodi:role="line"
+         id="tspan57"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="91.806267"
+         y="100.92818">uses</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="56.855007"
+       y="101.75142"
+       id="text58"><tspan
+         sodipodi:role="line"
+         id="tspan58"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="56.855007"
+         y="101.75142">uses</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="18.439322"
+       y="100.32762"
+       id="text59"><tspan
+         sodipodi:role="line"
+         id="tspan59"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="18.439322"
+         y="100.32762">uses</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker50)"
+       d="m 85.039701,48.537309 15.335579,2.608011"
+       id="path60" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:1.05;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.0661458;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="86.614265"
+       y="45.610195"
+       id="text62"><tspan
+         sodipodi:role="line"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="86.614265"
+         y="45.610195"
+         id="tspan62">manages </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'HelveticaNeue LT 55 Roman';-inkscape-font-specification:'HelveticaNeue LT 55 Roman, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0661458"
+         x="86.614265"
+         y="47.832699"
+         id="tspan63">configuration</tspan></text>
+  </g>
+</svg>
