@@ -22,7 +22,7 @@ max-memory: 95%
 # Point to R5’s JAR (or build directory) in case you want to use a custom R5
 # installation.
 
-r5-classpath: https://github.com/DigitalGeographyLab/r5/releases/download/v6.9-post17-g8207701-20230811/r5-v6.9-post17-g8207701-20230811-all.jar
+r5-classpath: https://github.com/DigitalGeographyLab/r5/releases/download/v7.1-dgl/r5-v7.1-dgl-all.jar
 
 
 

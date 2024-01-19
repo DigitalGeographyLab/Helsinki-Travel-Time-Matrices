@@ -9,7 +9,7 @@
 set +m -euo pipefail
 IFS=$'\n\t '
 
-R5PY_GIT_URL="https://github.com/r5py/r5py.git@v0.1.0"
+R5PY_GIT_URL="https://github.com/r5py/r5py.git@342803f"
 RUN_TESTS=false
 
 # 8. Install r5py into this unprivileged user’s ~/.local/

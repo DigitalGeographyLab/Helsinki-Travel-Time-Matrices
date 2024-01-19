@@ -18,7 +18,7 @@ apt-get --yes upgrade
 # 2. Install system-wide dependencies
 apt-get --yes install \
     build-essential \
-    default-jre \
+    openjdk-21-jre \
     git \
     osmium-tool \
     p7zip-full \
